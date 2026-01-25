@@ -1,5 +1,5 @@
 ﻿using Sharik.Domain.Common;
-using Sharik.Domain.Exchange.Enums;
+using Sharik.Domain.Exchanges.Enums;
 using Sharik.Domain.Skills;
 
 namespace Sharik.Domain.Exchanges
@@ -30,5 +30,6 @@ namespace Sharik.Domain.Exchanges
         public Skill SkillOffered { get; set; } = null!;
         public Skill SkillRequested { get; set; } = null!;
         private Exchange() { }
+
     }
 }
