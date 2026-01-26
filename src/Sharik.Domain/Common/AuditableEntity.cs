@@ -2,11 +2,11 @@
 {
     public class AuditableEntity : Entity
     {
-        public DateTime CreatedAtUtc { get; set; }
+        public DateTimeOffset CreatedAtUtc { get; set; }
 
         public string? CreatedBy { get; set; }
 
-        public DateTime LastModifiedUtc { get; set; }
+        public DateTimeOffset LastModifiedUtc { get; set; }
 
         public string? LastModifiedBy { get; set; }
 
@@ -14,7 +14,7 @@
 
         public bool IsActive { get; set; } = true;
 
-        public DateTime? DeletedUtc { get; set; }
+        public DateTimeOffset? DeletedUtc { get; set; }
 
         public string? DeletedBy { get; set; }
 

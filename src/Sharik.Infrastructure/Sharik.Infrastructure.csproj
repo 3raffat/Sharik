@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Sharik.Application\Sharik.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Auth\" />
+  </ItemGroup>
+
 </Project>

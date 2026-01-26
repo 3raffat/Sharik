@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Sharik.Domain.Exchanges;
 using Sharik.Domain.Ratings;
+using Sharik.Domain.Skills.UserSkills;
 using Sharik.Domain.User.Enums;
 
 namespace Sharik.Infrastructure.Auth
@@ -10,7 +11,9 @@ namespace Sharik.Infrastructure.Auth
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Bio { get; set; }
-        public int Points { get; set; } = 50;
+        public int TotalPointsEarned { get; set; }
+        public double Rating { get; set; }
+
         public ProfileStatus ProfileStatus { get; set; } = ProfileStatus.Incomplete;
 
         private List<Exchange> _providedExchanges = new();
@@ -24,6 +27,9 @@ namespace Sharik.Infrastructure.Auth
 
         private List<Rating> _givenRatings = new();
         public IEnumerable<Rating> RivenRatings => _givenRatings.AsReadOnly();
+
+        private readonly List<UserSkill> _userSkills = new();
+        public IEnumerable<UserSkill> UserSkills => _userSkills.AsReadOnly();
         private AppUser() { }
     }
 }

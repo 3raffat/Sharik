@@ -48,7 +48,7 @@ namespace Sharik.Domain.Ratings
             if (score < 1 || score > 5)
                 return RatingErrors.ScoreOutOfRange;
 
-            if(raterId == ratedUserId)
+            if (raterId == ratedUserId)
                 return RatingErrors.CannotRateSelf;
 
             if (!Enum.IsDefined(type))
