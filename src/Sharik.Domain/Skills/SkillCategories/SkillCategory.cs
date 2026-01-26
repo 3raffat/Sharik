@@ -11,11 +11,13 @@ namespace Sharik.Domain.Skills.SkillCategories
         public IEnumerable<Skill> Skills => _skills.AsReadOnly();
         private SkillCategory()
         { }
-        private SkillCategory(Guid id, string name) : base(id)
+        private SkillCategory(Guid id,
+                              string name) : base(id)
         {
             Name = name;
         }
-        public static Result<SkillCategory> Create(Guid id, string name)
+        public static Result<SkillCategory> Create(Guid id,
+                                                   string name)
         {
             if (id == Guid.Empty)
                 return SkillCategoryErrors.SkillCategoryIdRequired;

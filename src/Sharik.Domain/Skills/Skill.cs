@@ -1,6 +1,8 @@
 ﻿using Sharik.Domain.Common;
 using Sharik.Domain.Common.Results;
+using Sharik.Domain.Exchanges;
 using Sharik.Domain.Skills.SkillCategories;
+using Sharik.Domain.Skills.UserSkills;
 
 namespace Sharik.Domain.Skills
 {
@@ -9,6 +11,15 @@ namespace Sharik.Domain.Skills
         public string Name { get; private set; } = string.Empty;
         public Guid SkillCategoryId { get; set; }
         public SkillCategory SkillCategory { get; set; } = null!;
+        private readonly List<Exchange> _offeredExchanges = new();
+        public IEnumerable<Exchange> OfferedExchanges => _offeredExchanges;
+
+        private readonly List<Exchange> _requestedExchanges  = new();   
+        public IEnumerable<Exchange> RequestedExchanges => _requestedExchanges;
+
+        private readonly List<UserSkill> _userSkills = new();
+        public IEnumerable<UserSkill> UserSkills => _userSkills.AsReadOnly();
+
         private Skill()
         { }
         private Skill(Guid id,
