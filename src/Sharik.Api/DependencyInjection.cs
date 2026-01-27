@@ -1,5 +1,7 @@
 ﻿using Asp.Versioning;
 using Sharik.Api.OpenApi;
+using Sharik.Api.Services;
+using Sharik.Application.Common.Interfaces;
 
 namespace Sharik.Api
 {
@@ -8,6 +10,8 @@ namespace Sharik.Api
 
         public static IServiceCollection AddPresentation(this IServiceCollection services)
         {
+            services.AddScoped<IUser,CurrentUser>();
+            services.AddHttpContextAccessor();
             services.AddCustomApiVersioning()
                 .AddApiDocumentation();
                 return services;

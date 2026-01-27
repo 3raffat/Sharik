@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Domain.Exchanges;
@@ -10,7 +11,7 @@ using Sharik.Infrastructure.Auth;
 
 namespace Sharik.Infrastructure.Data
 {
-    public sealed class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext
+    public sealed class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>, IAppDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public AppDbContext() { }

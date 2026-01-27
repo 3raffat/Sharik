@@ -6,7 +6,7 @@ using Sharik.Domain.User.Enums;
 
 namespace Sharik.Infrastructure.Auth
 {
-    public sealed class AppUser : IdentityUser
+    public sealed class AppUser : IdentityUser<Guid>
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

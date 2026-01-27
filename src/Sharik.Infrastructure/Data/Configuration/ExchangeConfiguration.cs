@@ -23,22 +23,22 @@ namespace Sharik.Infrastructure.Data.Configuration
                      .IsRequired();
 
             builder.HasOne(e => e.Requester)
-                   .WithMany()
+                   .WithMany(e=>e.RequestedExchanges)
                    .HasForeignKey(e => e.RequesterId)
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Provider)
-                   .WithMany()
+                   .WithMany(e=>e.ProvidedExchanges)
                    .HasForeignKey(e => e.ProviderId)
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.SkillOffered)
-                   .WithMany()
+                   .WithMany(e=>e.OfferedExchanges)
                    .HasForeignKey(e => e.SkillOfferedId)
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.SkillRequested)
-                     .WithMany()
+                     .WithMany(e=>e.RequestedExchanges)
                      .HasForeignKey(e => e.SkillRequestedId)
                      .OnDelete(DeleteBehavior.Cascade);
 
