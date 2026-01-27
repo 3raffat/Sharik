@@ -20,7 +20,5 @@ namespace Sharik.Application.Common.Interfaces
         public DbSet<Rating> Ratings { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
-
-
     }
 }

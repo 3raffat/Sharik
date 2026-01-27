@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sharik.Domain.Skills.UserSkills;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Sharik.Infrastructure.Data.Configuration
 {
@@ -28,11 +25,11 @@ namespace Sharik.Infrastructure.Data.Configuration
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(us => us.User)
-                   .WithMany(us=>us.UserSkills)
+                   .WithMany(us => us.UserSkills)
                    .HasForeignKey(us => us.UserId)
                    .OnDelete(DeleteBehavior.Cascade);
 
-
+            builder.HasQueryFilter(us => !us.IsDeleted);
         }
     }
 }

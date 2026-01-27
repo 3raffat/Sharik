@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sharik.Domain.Skills;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Sharik.Infrastructure.Data.Configuration
 {
@@ -12,7 +9,7 @@ namespace Sharik.Infrastructure.Data.Configuration
         public void Configure(EntityTypeBuilder<Skill> builder)
         {
             builder.ToTable("Skills");
-            
+
             builder.HasKey(s => s.Id);
 
             builder.Property(s => s.Name)
@@ -24,7 +21,7 @@ namespace Sharik.Infrastructure.Data.Configuration
                    .HasForeignKey(s => s.SkillCategoryId)
                    .OnDelete(DeleteBehavior.Cascade);
 
-        
+            builder.HasQueryFilter(s => !s.IsDeleted);
         }
     }
 }

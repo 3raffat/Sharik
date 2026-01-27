@@ -37,6 +37,8 @@ namespace Sharik.Infrastructure.Data.Configuration
                    .WithMany()
                    .HasForeignKey(r => r.RatedUserId)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasQueryFilter(r => !r.IsDeleted);
         }
     }
 }
