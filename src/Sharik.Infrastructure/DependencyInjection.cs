@@ -28,6 +28,9 @@ public static class DependencyInjection
 
         _services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
 
+        _services.AddScoped<ISaveChangesInterceptor, SoftDeleteInterceptor>();
+
+
         return _services;
     }
 }

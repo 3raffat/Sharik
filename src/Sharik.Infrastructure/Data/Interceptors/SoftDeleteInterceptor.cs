@@ -6,22 +6,21 @@ using Sharik.Domain.Common;
 
 namespace Sharik.Infrastructure.Data.Interceptors
 {
-    public sealed class AuditableEntityInterceptor(ILogger<AuditableEntityInterceptor> logger, TimeProvider time, IUser user) : SaveChangesInterceptor
+    public sealed class SoftDeleteInterceptor(ILogger<SoftDeleteInterceptor> logger, TimeProvider time, IUser user) : SaveChangesInterceptor
     {
-        private readonly ILogger<AuditableEntityInterceptor> _logger = logger;
+        private readonly ILogger<SoftDeleteInterceptor> _logger = logger;
         private readonly TimeProvider _time = time;
         private readonly IUser _user = user;
-
 
         public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {
             if (eventData.Context is null)
             {
-                _logger.LogWarning("DbContext is null in SavedChanges of AuditableEntityInterceptor");
+                _logger.LogWarning("DbContext is null in SavingChanges");
                 return base.SavingChanges(eventData, result);
             }
 
-            UpdateEntities(eventData.Context);
+            ProcessSoftDeletes(eventData.Context);
 
             return base.SavingChanges(eventData, result);
         }
@@ -31,16 +30,18 @@ namespace Sharik.Infrastructure.Data.Interceptors
         {
             if (eventData.Context is null)
             {
-                _logger.LogWarning("DbContext is null in SavedChangesAsync of AuditableEntityInterceptor");
+                _logger.LogWarning("DbContext is null in SavingChangesAsync");
                 return base.SavingChangesAsync(eventData, result, cancellationToken);
             }
 
-            UpdateEntities(eventData.Context);
+            ProcessSoftDeletes(eventData.Context);
 
             return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
-        private void UpdateEntities(DbContext context)
+
+        private void ProcessSoftDeletes(DbContext context)
         {
+
             var utcNow = _time.GetUtcNow();
             var userId = _user.Id;
 
@@ -49,19 +50,17 @@ namespace Sharik.Infrastructure.Data.Interceptors
 
             foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
             {
-                switch (entry.State)
+                if (entry.State == EntityState.Deleted)
                 {
-                    case EntityState.Added:
-                        entry.Entity.CreatedBy = userId;
-                        entry.Entity.CreatedAtUtc = utcNow;
-                        entry.Entity.LastModifiedBy = userId;
-                        entry.Entity.LastModifiedUtc = utcNow;
-                        break;
+                    entry.State = EntityState.Modified;
+                    entry.Entity.IsDeleted = true;
+                    entry.Entity.LastModifiedBy = userId;
+                    entry.Entity.LastModifiedUtc = utcNow;
 
-                    case EntityState.Modified:
-                        entry.Entity.LastModifiedBy = userId;
-                        entry.Entity.LastModifiedUtc = utcNow;
-                        break;
+                    _logger.LogInformation("Soft deleted auditable entity {entity} with user id {userid} at {time}",
+                                           entry.Entity.GetType().Name,
+                                           userId,
+                                           utcNow);
                 }
             }
         }

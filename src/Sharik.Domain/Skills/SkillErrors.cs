@@ -18,5 +18,17 @@ namespace Sharik.Domain.Skills
                 description: "Skill name cannot be empty."
             );
 
+        public static Error SkillNameTooShort=>
+            Error.Validation(
+                code: "Skill.SkillName.TooShort",
+                description: "Skill name must be at least 3 characters long."
+            );
+
+        public static Error SkillNameTooLong =>
+            Error.Validation(
+                code: "Skill.SkillName.TooLong",
+                description: "Skill name cannot exceed 100 characters."
+            );
+
     }
 }

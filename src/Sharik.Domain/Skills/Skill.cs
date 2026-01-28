@@ -44,7 +44,13 @@ namespace Sharik.Domain.Skills
             if (string.IsNullOrWhiteSpace(name))
                 return SkillErrors.SkillNameRequired;
 
-            return new Skill(id, categoryId, name);
+            if (name.Length < 3)
+                return SkillErrors.SkillNameTooShort;
+
+            if (name.Length > 100) 
+                return SkillErrors.SkillNameTooLong;
+
+            return new Skill(id, categoryId, name.Trim());
         }
 
         public Result<Updated> Update(string name,
@@ -57,7 +63,7 @@ namespace Sharik.Domain.Skills
             if (categoryId == Guid.Empty)
                 return SkillCategoryErrors.SkillCategoryIdRequired;
 
-            Name = name;
+            Name = name.Trim();
             SkillCategoryId = categoryId;
 
             return Result.Updated;
