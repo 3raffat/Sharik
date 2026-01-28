@@ -1,7 +1,4 @@
 ﻿using Sharik.Domain.Common.Results;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Sharik.Domain.Skills.SkillCategories
 {
@@ -17,6 +14,18 @@ namespace Sharik.Domain.Skills.SkillCategories
            => Error.Validation(
                code: "SkillCategory.Id.Required",
                description: "Skill category ID cannot be empty."
+           );
+
+        public static Error SkillCategoryNameTooShort
+            => Error.Validation(
+                code: "Skill.SkillName.TooShort",
+                description: "Category name must be at least 3 characters long."
+            );
+
+        public static Error SkillCategoryNameTooLong
+           => Error.Validation(
+                  code: "Skill.SkillName.TooLong",
+                  description: "Category name cannot exceed 20 characters."
            );
     }
 }

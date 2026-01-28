@@ -25,15 +25,27 @@ namespace Sharik.Domain.Skills.SkillCategories
             if (string.IsNullOrWhiteSpace(name))
                 return SkillCategoryErrors.SkillCategoryNameRequired;
 
+            if (name.Length < 3)
+                return SkillCategoryErrors.SkillCategoryNameTooShort;
 
-            return new SkillCategory(id, name);
+            if (name.Length > 20)
+                return SkillCategoryErrors.SkillCategoryNameTooLong;
+
+
+            return new SkillCategory(id, name.Trim());
         }
         public Result<Updated> Update(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return SkillCategoryErrors.SkillCategoryNameRequired;
 
-            Name = name;
+            if (name.Length < 3)
+                return SkillCategoryErrors.SkillCategoryNameTooShort;
+
+            if (name.Length > 20)
+                return SkillCategoryErrors.SkillCategoryNameTooLong;
+
+            Name = name.Trim();
 
             return Result.Updated;
         }

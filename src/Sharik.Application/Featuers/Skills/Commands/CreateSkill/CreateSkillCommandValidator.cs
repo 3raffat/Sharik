@@ -14,7 +14,11 @@ namespace Sharik.Application.Featuers.Skills.Commands.CreateSkill
                     .WithMessage(SkillErrors.SkillNameRequired.Description)
                 .MaximumLength(100)
                    .WithErrorCode(SkillErrors.SkillNameTooLong.Code)
-                   .WithMessage(SkillErrors.SkillNameTooLong.Description);
+                   .WithMessage(SkillErrors.SkillNameTooLong.Description)
+                .MinimumLength(3)
+                   .WithErrorCode(SkillErrors.SkillNameTooShort.Code)
+                   .WithMessage(SkillErrors.SkillNameTooShort.Description);
+
 
             RuleFor(x => x.CategoryId)
                 .NotEmpty()

@@ -18,6 +18,10 @@ namespace Sharik.Application.Common.Errors
 
         public static Error SkillNotFound => Error.NotFound(
             code: "Skill.NotFound",
-            description: "The specified skill was not found."); 
+            description: "The specified skill was not found.");
+
+        public static Error SkillCategoryAlreadyExists => Error.Conflict(
+            code: "SkillCategory.AlreadyExists",
+            description: "A Category with the specified name already exists.");
     }
 }
