@@ -36,13 +36,12 @@ namespace Sharik.Application.Featuers.Skills.Commands.CreateSkill
                 return ApplicationErrors.SkillAlreadyExists;
             }
 
-            var skillResult = Skill.Create(Guid.NewGuid(),
-                                           request.CategoryId,
+            var skillResult = Skill.Create(request.CategoryId,
                                            request.Name);
 
             if (skillResult.IsFailure)
                 return skillResult.Errors;
-          
+
 
             var skill = skillResult.Value;
 

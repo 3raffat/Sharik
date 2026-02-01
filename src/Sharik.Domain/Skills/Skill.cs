@@ -31,13 +31,10 @@ namespace Sharik.Domain.Skills
             Name = name;
         }
 
-        public static Result<Skill> Create(Guid id,
-                                           Guid categoryId,
+        public static Result<Skill> Create(Guid categoryId,
                                            string name)
         {
-            if (id == Guid.Empty)
-                return SkillErrors.SkillIdRequired;
-
+    
             if (categoryId == Guid.Empty)
                 return SkillCategoryErrors.SkillCategoryIdRequired;
 
@@ -50,7 +47,7 @@ namespace Sharik.Domain.Skills
             if (name.Length > 100) 
                 return SkillErrors.SkillNameTooLong;
 
-            return new Skill(id, categoryId, name.Trim());
+            return new Skill(Guid.NewGuid(), categoryId, name.Trim());
         }
 
         public Result<Updated> Update(string name,

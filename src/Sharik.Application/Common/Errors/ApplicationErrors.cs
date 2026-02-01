@@ -1,7 +1,4 @@
 ﻿using Sharik.Domain.Common.Results;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Sharik.Application.Common.Errors
 {
@@ -23,5 +20,17 @@ namespace Sharik.Application.Common.Errors
         public static Error SkillCategoryAlreadyExists => Error.Conflict(
             code: "SkillCategory.AlreadyExists",
             description: "A Category with the specified name already exists.");
+
+        public static Error UserNotFound => Error.NotFound(
+             code: "User.NotFound",
+             description: "The user with the specified ID was not found.");
+
+        public static Error SkillAlreadyExistsForUser => Error.Conflict(
+             code: "UserSkill.AlreadyExists",
+             description: "This skill is already assigned to the user.");
+
+        public static Error UserSkillNotFound => Error.NotFound(
+            code: "UserSkill.NotFound",
+            description: "The Skill with the specified ID was not found.");
     }
 }

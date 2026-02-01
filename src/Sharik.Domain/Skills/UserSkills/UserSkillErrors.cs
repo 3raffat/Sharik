@@ -22,6 +22,16 @@ namespace Sharik.Domain.Skills.UserSkills
             description: "User id is required."
         );
 
+        public static readonly Error SkillIdRequired = Error.Validation(
+            code: "UserSkill.SkillId.Required",
+            description: "Skill id is required."
+        );
+
+        public static readonly Error PointPerHourRequired = Error.Validation(
+          code: "UserSkill. PointPerHour.Required",
+          description: "Point per hour is required."
+      );
+
         public static readonly Error InvalidSkillLevel = Error.Validation(
             code: "UserSkill.SkillLevel.Invalid",
             description: "Invalid skill level."

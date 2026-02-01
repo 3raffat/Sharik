@@ -24,8 +24,7 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.CreateSkillCatego
                 return ApplicationErrors.SkillCategoryAlreadyExists;
             }
 
-            var skillCategoryResult = SkillCategory.Create(Guid.NewGuid(),
-                                                           request.Name);
+            var skillCategoryResult = SkillCategory.Create(request.Name);
 
             if (skillCategoryResult.IsFailure)
                 return skillCategoryResult.Errors;

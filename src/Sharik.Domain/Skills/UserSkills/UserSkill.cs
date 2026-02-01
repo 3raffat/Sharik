@@ -20,10 +20,11 @@ namespace Sharik.Domain.Skills.UserSkills
         private UserSkill()
         { }
 
-        private UserSkill(Guid userId,
+        private UserSkill(Guid id,
+                          Guid userId,
                           Guid skillId,
                           SkillLevel skillLevel,
-                          int pointPerHour)
+                          int pointPerHour):base(id)
         {
             UserId = userId;
             SkillId = skillId;
@@ -32,9 +33,9 @@ namespace Sharik.Domain.Skills.UserSkills
         }
 
         public static Result<UserSkill> Create(Guid userId,
-                                       Guid skillId,
-                                       SkillLevel skillLevel,
-                                       int pointPerHour)
+                                               Guid skillId,
+                                               SkillLevel skillLevel,
+                                               int pointPerHour)
         {
 
             if (userId == Guid.Empty)
@@ -49,7 +50,7 @@ namespace Sharik.Domain.Skills.UserSkills
             if (pointPerHour <= 0 || pointPerHour > 100)
                 return UserSkillErrors.PointPerHourInvalid;
 
-            return new UserSkill(userId, skillId, skillLevel, pointPerHour);
+            return new UserSkill(Guid.NewGuid(),userId, skillId, skillLevel, pointPerHour);
         }
 
         public Result<Updated> Update(SkillLevel skillLevel,

@@ -13,6 +13,7 @@
   <ItemGroup>
     <Folder Include="Featuers\SkillCategories\Queries\" />
     <Folder Include="Featuers\Skills\Queries\" />
+    <Folder Include="Featuers\UserSkills\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

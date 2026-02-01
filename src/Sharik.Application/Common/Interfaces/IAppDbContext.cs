@@ -5,6 +5,7 @@ using Sharik.Domain.Ratings;
 using Sharik.Domain.Skills;
 using Sharik.Domain.Skills.SkillCategories;
 using Sharik.Domain.Skills.UserSkills;
+using Sharik.Infrastructure.Auth;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,6 +19,7 @@ namespace Sharik.Application.Common.Interfaces
         public DbSet<SkillCategory> SkillCategories { get;  }
         public DbSet<Exchange> Exchanges { get; }
         public DbSet<Rating> Ratings { get; }
+        public DbSet<AppUser> Users { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
     }
