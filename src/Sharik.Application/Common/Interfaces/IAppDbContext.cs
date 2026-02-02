@@ -20,7 +20,7 @@ namespace Sharik.Application.Common.Interfaces
         public DbSet<Exchange> Exchanges { get; }
         public DbSet<Rating> Ratings { get; }
         public DbSet<AppUser> Users { get; }
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task<int> SaveChangesAsync(CancellationToken ct = default);
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
     }
 }

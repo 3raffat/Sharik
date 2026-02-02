@@ -26,17 +26,17 @@ namespace Sharik.Infrastructure.Data.Interceptors
         }
         public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
                                                                               InterceptionResult<int> result,
-                                                                              CancellationToken cancellationToken = default)
+                                                                              CancellationToken ct = default)
         {
             if (eventData.Context is null)
             {
                 _logger.LogWarning("DbContext is null in SavingChangesAsync");
-                return base.SavingChangesAsync(eventData, result, cancellationToken);
+                return base.SavingChangesAsync(eventData, result, ct);
             }
 
             ProcessSoftDeletes(eventData.Context);
 
-            return base.SavingChangesAsync(eventData, result, cancellationToken);
+            return base.SavingChangesAsync(eventData, result, ct);
         }
 
         private void ProcessSoftDeletes(DbContext context)

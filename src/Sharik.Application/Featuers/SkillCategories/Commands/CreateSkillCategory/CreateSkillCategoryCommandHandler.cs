@@ -14,9 +14,9 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.CreateSkillCatego
         ILogger<CreateSkillCategoryCommandHandler> _logger,
         IAppDbContext _context) : IRequestHandler<CreateSkillCategoryCommand, Result<SkillCategoryDto>>
     {
-        public async Task<Result<SkillCategoryDto>> Handle(CreateSkillCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<SkillCategoryDto>> Handle(CreateSkillCategoryCommand request, CancellationToken ct)
         {
-            var skillNameExists = await _context.SkillCategories.AnyAsync(sc => sc.Name == request.Name, cancellationToken);
+            var skillNameExists = await _context.SkillCategories.AnyAsync(sc => sc.Name == request.Name, ct);
 
             if (skillNameExists)
             {
@@ -31,9 +31,9 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.CreateSkillCatego
 
             var skillCategory = skillCategoryResult.Value;
 
-            await _context.SkillCategories.AddAsync(skillCategory, cancellationToken);
+            await _context.SkillCategories.AddAsync(skillCategory, ct);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(ct);
 
             _logger.LogInformation("Category with ID {CategoryId} created successfully.", skillCategory.Id);
 

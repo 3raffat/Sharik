@@ -15,11 +15,12 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.MapOpenApi();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", " Sharik API V1");
-
+        options.RoutePrefix = string.Empty;
         options.EnableDeepLinking();
         options.DisplayRequestDuration();
         options.EnableFilter();

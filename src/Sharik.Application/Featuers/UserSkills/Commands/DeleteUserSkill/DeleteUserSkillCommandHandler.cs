@@ -11,11 +11,11 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.DeleteUserSkill
         ILogger<DeleteUserSkillCommandHandler> _logger,
         IAppDbContext _context) : IRequestHandler<DeleteUserSkillCommand, Result<Deleted>>
     {
-        public async Task<Result<Deleted>> Handle(DeleteUserSkillCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Deleted>> Handle(DeleteUserSkillCommand request, CancellationToken ct)
         {
 
             var userSkill = await _context.UserSkills.FirstOrDefaultAsync(us => us.UserId == request.UserId && us.SkillId == request.SkillId,
-                                                              cancellationToken);
+                                                              ct);
             if (userSkill is null)
             {
                 _logger.LogWarning("User {UserId} does not have Skill {SkillId}", request.UserId, request.SkillId);
@@ -24,7 +24,7 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.DeleteUserSkill
 
             _context.UserSkills.Remove(userSkill);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(ct);
 
             _logger.LogInformation("User skill deleted successfully for UserId {UserId}, SkillId {SkillId}",request.UserId, request.SkillId);
 

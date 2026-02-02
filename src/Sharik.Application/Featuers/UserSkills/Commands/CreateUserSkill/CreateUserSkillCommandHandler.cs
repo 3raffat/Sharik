@@ -15,10 +15,10 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.CreateUserSkill
         IAppDbContext _context)
         : IRequestHandler<CreateUserSkillCommand, Result<UserSkillDto>>
     {
-        public async Task<Result<UserSkillDto>> Handle(CreateUserSkillCommand request, CancellationToken cancellationToken)
+        public async Task<Result<UserSkillDto>> Handle(CreateUserSkillCommand request, CancellationToken ct)
         {
            
-            var existSkill = await _context.Skills.AnyAsync(us => us.Id == request.skillId, cancellationToken);
+            var existSkill = await _context.Skills.AnyAsync(us => us.Id == request.skillId, ct);
 
             if (!existSkill)
             {
@@ -27,7 +27,7 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.CreateUserSkill
             }
 
             var hasSkill = await _context.UserSkills.AnyAsync(us => us.UserId == request.userId && us.SkillId == request.skillId,
-                                                              cancellationToken);
+                                                              ct);
 
             if (hasSkill)
             {
@@ -46,9 +46,9 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.CreateUserSkill
 
             var userSkill = userSkillResult.Value;
 
-            await _context.UserSkills.AddAsync(userSkill, cancellationToken);
+            await _context.UserSkills.AddAsync(userSkill, ct);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(ct);
 
             _logger.LogInformation("User skills created successfully for UserId {UserId}.", userSkill.UserId);
 

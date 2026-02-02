@@ -17,9 +17,9 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.UpdateUserSkill
         ILogger<UpdateUserSkillCommandHandler> _logger,
         IAppDbContext _context) : IRequestHandler<UpdateUserSkillCommand, Result<Updated>>
     {
-        public async Task<Result<Updated>> Handle(UpdateUserSkillCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Updated>> Handle(UpdateUserSkillCommand request, CancellationToken ct)
         {
-            var existSkill = await _context.Skills.AnyAsync(us => us.Id == request.skillId, cancellationToken);
+            var existSkill = await _context.Skills.AnyAsync(us => us.Id == request.skillId, ct);
 
             if (!existSkill)
             {
@@ -28,7 +28,7 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.UpdateUserSkill
             }
 
             var hasSkill = await _context.UserSkills.FirstOrDefaultAsync(us => us.UserId == request.userId && us.SkillId == request.skillId,
-                                                              cancellationToken);
+                                                              ct);
 
             if (hasSkill is null)
             {
@@ -44,7 +44,7 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.UpdateUserSkill
 
             var userSkill = userSkillResult.Value;
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(ct);
 
             _logger.LogInformation("User skills updated  successfully for UserId {UserId}.", request.userId);
 

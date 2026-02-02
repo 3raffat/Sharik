@@ -11,10 +11,10 @@ namespace Sharik.Application.Featuers.Skills.Commands.DeleteSkill
         ILogger<DeleteSkillCommandHandler> _logger,
         IAppDbContext _context) : IRequestHandler<DeleteSkillCommand, Result<Deleted>>
     {
-        public async Task<Result<Deleted>> Handle(DeleteSkillCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Deleted>> Handle(DeleteSkillCommand request, CancellationToken ct)
         {
             var skill = await _context.Skills.FirstOrDefaultAsync(s => s.Id == request.SkillId,
-                                                                  cancellationToken);
+                                                                  ct);
 
             if (skill is null)
             {
@@ -25,7 +25,7 @@ namespace Sharik.Application.Featuers.Skills.Commands.DeleteSkill
 
             _context.Skills.Remove(skill);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(ct);
 
             _logger.LogInformation("Skill with Id: {SkillId} deleted successfully.", request.SkillId);
 

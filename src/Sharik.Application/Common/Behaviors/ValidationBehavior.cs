@@ -10,15 +10,15 @@ namespace Sharik.Application.Common.Behaviors
     {
         private readonly IValidator<TRequest>? _validator = validator;
 
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
         {
             if (_validator is null)
-                await next(cancellationToken);
+                await next(ct);
 
-            var ValidationResult = await _validator.ValidateAsync(request, cancellationToken);
+            var ValidationResult = await _validator.ValidateAsync(request, ct);
 
             if (ValidationResult.IsValid)
-                await next(cancellationToken);
+                await next(ct);
 
             var errors = ValidationResult.Errors.ConvertAll(e => Error.Validation(e.ErrorMessage, e.PropertyName));
 

@@ -15,9 +15,9 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.UpdateSkillCatego
         IAppDbContext _context)
         : IRequestHandler<UpdateSkillCategoryCommand, Result<SkillCategoryDto>>
     {
-        public async Task<Result<SkillCategoryDto>> Handle(UpdateSkillCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<SkillCategoryDto>> Handle(UpdateSkillCategoryCommand request, CancellationToken ct)
         {
-            var category = await _context.SkillCategories.FirstOrDefaultAsync(sc => sc.Id == request.Id, cancellationToken);
+            var category = await _context.SkillCategories.FirstOrDefaultAsync(sc => sc.Id == request.Id, ct);
 
             if (category is null)
             {
@@ -31,7 +31,7 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.UpdateSkillCatego
                     .AsNoTracking()
                     .AnyAsync(s => s.Name == request.Name
                                 && s.Id != request.Id,
-                              cancellationToken);
+                              ct);
 
                 if (categoryNameExists)
                 {
@@ -45,7 +45,7 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.UpdateSkillCatego
             if (categoryResult.IsFailure)
                 return categoryResult.Errors;
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(ct);
 
             _logger.LogInformation("Category with Id: {CategoryId} updated successfully", request.Id);
 

@@ -5,7 +5,7 @@ namespace Sharik.Api.OpenApi
 {
     public sealed class VersionInfoTransformer : IOpenApiDocumentTransformer
     {
-        public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
+        public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken ct)
         {
             var version = context.DocumentName;
 

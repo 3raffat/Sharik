@@ -13,10 +13,10 @@ namespace Sharik.Application.Featuers.Skills.Commands.UpdateSkill
         ILogger<UpdateSkillCommandHandler> _logger,
         IAppDbContext _context) : IRequestHandler<UpdateSkillCommand, Result<SkillDto>>
     {
-        public async Task<Result<SkillDto>> Handle(UpdateSkillCommand request, CancellationToken cancellationToken)
+        public async Task<Result<SkillDto>> Handle(UpdateSkillCommand request, CancellationToken ct)
         {
             var skill = await _context.Skills.FirstOrDefaultAsync(
-                s => s.Id == request.SkillId, cancellationToken);
+                s => s.Id == request.SkillId, ct);
 
             if (skill is null)
             {
@@ -32,7 +32,7 @@ namespace Sharik.Application.Featuers.Skills.Commands.UpdateSkill
                     .AsNoTracking()
                     .AnyAsync(s => s.Name.ToLower() == skillName.ToLower()
                                 && s.Id != request.SkillId,
-                              cancellationToken);
+                              ct);
 
                 if (skillNameExists)
                 {
@@ -43,7 +43,7 @@ namespace Sharik.Application.Featuers.Skills.Commands.UpdateSkill
 
             var skillCategoryExists = await _context.SkillCategories
                 .AsNoTracking()
-                .AnyAsync(sc => sc.Id == request.SkillCategoryId, cancellationToken);
+                .AnyAsync(sc => sc.Id == request.SkillCategoryId, ct);
 
             if (!skillCategoryExists)
             {
@@ -57,7 +57,7 @@ namespace Sharik.Application.Featuers.Skills.Commands.UpdateSkill
             if (skillResult.IsFailure)
                 return skillResult.Errors;
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(ct);
 
             _logger.LogInformation("Skill with Id: {SkillId} updated successfully", request.SkillId);
 

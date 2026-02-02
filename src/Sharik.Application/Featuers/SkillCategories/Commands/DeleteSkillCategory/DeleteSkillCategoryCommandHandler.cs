@@ -12,10 +12,10 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.DeleteSkillCatego
         IAppDbContext _context)
         : IRequestHandler<DeleteSkillCategoryCommand, Result<Deleted>>
     {
-        public async Task<Result<Deleted>> Handle(DeleteSkillCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Deleted>> Handle(DeleteSkillCategoryCommand request, CancellationToken ct)
         {
             var category = await _context.SkillCategories.FirstOrDefaultAsync(sc => sc.Id == request.Id,
-                                                                              cancellationToken);
+                                                                              ct);
 
             if (category is null)
             {
@@ -25,7 +25,7 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.DeleteSkillCatego
 
             _context.SkillCategories.Remove(category);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(ct);
 
             _logger.LogInformation("Category with Id: {CategoryId} deleted successfully.", request.Id);
 

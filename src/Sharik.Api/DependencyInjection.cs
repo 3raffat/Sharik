@@ -43,9 +43,8 @@ namespace Sharik.Api
                     _options.AddDocumentTransformer<VersionInfoTransformer>();
 
                     //Security Scheme config
-
-                   
-
+                    _options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+                    _options.AddOperationTransformer<BearerSecuritySchemeTransformer>();
                 });
             }
             return services;
