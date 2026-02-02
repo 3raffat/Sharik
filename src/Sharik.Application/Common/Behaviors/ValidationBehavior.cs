@@ -13,12 +13,12 @@ namespace Sharik.Application.Common.Behaviors
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
         {
             if (_validator is null)
-                await next(ct);
+                return await next(ct);
 
             var ValidationResult = await _validator.ValidateAsync(request, ct);
 
             if (ValidationResult.IsValid)
-                await next(ct);
+                return await next(ct);
 
             var errors = ValidationResult.Errors.ConvertAll(e => Error.Validation(e.ErrorMessage, e.PropertyName));
 

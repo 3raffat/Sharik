@@ -1,4 +1,5 @@
-using Sharik.Api;
+using Sharik.Api.Endpoints;
+using Sharik.Api.Extensions;
 using Sharik.Application;
 using Sharik.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
@@ -28,7 +29,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+app.UseCoreMiddlewares();
+
+app.MapAllEndpoints();
 
 app.Run();
 

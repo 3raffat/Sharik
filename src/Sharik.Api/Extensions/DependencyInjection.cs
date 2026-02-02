@@ -3,7 +3,7 @@ using Sharik.Api.OpenApi;
 using Sharik.Api.Services;
 using Sharik.Application.Common.Interfaces;
 
-namespace Sharik.Api
+namespace Sharik.Api.Extensions
 {
     public static class DependencyInjection
     {

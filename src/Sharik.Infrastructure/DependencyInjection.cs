@@ -16,20 +16,21 @@ public static class DependencyInjection
     {
         _services.AddSingleton(TimeProvider.System);
 
+        _services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+
+        _services.AddScoped<ISaveChangesInterceptor, SoftDeleteInterceptor>();
+
         _services.AddDbContext<AppDbContext>((sp, _options) =>
         {
-            _options.AddInterceptors(sp.GetRequiredService<ISaveChangesInterceptor>());
+            var interceptors = sp.GetServices<ISaveChangesInterceptor>();
+
+            _options.AddInterceptors(interceptors);
             _options.UseNpgsql(_configuration.GetConnectionString("DefaultConnection"));
         }).AddIdentityCore<AppUser>()
         .AddRoles<IdentityRole<Guid>>()
         .AddEntityFrameworkStores<AppDbContext>();
 
         _services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
-
-        _services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
-
-        _services.AddScoped<ISaveChangesInterceptor, SoftDeleteInterceptor>();
-
 
         return _services;
     }

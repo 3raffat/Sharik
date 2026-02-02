@@ -56,6 +56,8 @@ namespace Sharik.Infrastructure.Data.Interceptors
                     entry.Entity.IsDeleted = true;
                     entry.Entity.LastModifiedBy = userId;
                     entry.Entity.LastModifiedUtc = utcNow;
+                    entry.Entity.DeletedUtc = utcNow;
+                    entry.Entity.DeletedBy = userId;
 
                     _logger.LogInformation("Soft deleted auditable entity {entity} with user id {userid} at {time}",
                                            entry.Entity.GetType().Name,
