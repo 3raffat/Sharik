@@ -7,17 +7,17 @@ namespace Sharik.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection _services)
+    public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        _services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        _services.AddMediatR(cfg =>
+        services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
 
         });
 
-        return _services;
+        return services;
     }   
 }

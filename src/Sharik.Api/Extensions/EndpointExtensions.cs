@@ -13,7 +13,7 @@ namespace Sharik.Api.Extensions
 
             app.MapSkillEndpoints(apiVersionSet);
             app.MapCategoryEndpoints(apiVersionSet);
-
+            app.MapUserSkillEndpoints(apiVersionSet);
             return app;
         }
 

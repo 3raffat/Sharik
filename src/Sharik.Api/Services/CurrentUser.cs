@@ -12,5 +12,7 @@ namespace Sharik.Api.Services
             _httpContextAccessor = httpContextAccessor;
         }
         public string? Id => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        public Guid UserId => Guid.Parse(Id!);  
     }
 }

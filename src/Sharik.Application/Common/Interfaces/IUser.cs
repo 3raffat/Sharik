@@ -7,5 +7,7 @@ namespace Sharik.Application.Common.Interfaces
     public interface IUser
     {
         string? Id { get; }
+        Guid UserId { get; }
+
     }
 }

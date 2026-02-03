@@ -26,7 +26,7 @@ namespace Sharik.Infrastructure.Auth
         public IEnumerable<Rating> ReceivedRatings => _receivedRatings.AsReadOnly();
 
         private List<Rating> _givenRatings = new();
-        public IEnumerable<Rating> RivenRatings => _givenRatings.AsReadOnly();
+        public IEnumerable<Rating> GivenRatings => _givenRatings.AsReadOnly();
 
         private readonly List<UserSkill> _userSkills = new();
         public IEnumerable<UserSkill> UserSkills => _userSkills.AsReadOnly();

@@ -18,16 +18,16 @@ namespace Sharik.Api.Extensions
         }
         public static IServiceCollection AddCustomApiVersioning(this IServiceCollection services)
         {
-            services.AddApiVersioning(_options =>
+            services.AddApiVersioning(options =>
             {
-                _options.AssumeDefaultVersionWhenUnspecified = true;
-                _options.DefaultApiVersion = new ApiVersion(1, 0);
-                _options.ReportApiVersions = true;
-                _options.ApiVersionReader = new UrlSegmentApiVersionReader();
-            }).AddApiExplorer(_options =>
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+            }).AddApiExplorer(options =>
             {
-                _options.GroupNameFormat = "'v'VVV";
-                _options.SubstituteApiVersionInUrl = true;
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
             });
             return services;
         }
@@ -37,14 +37,14 @@ namespace Sharik.Api.Extensions
             string[] versions = ["v1"];
             foreach (var version in versions)
             {
-                services.AddOpenApi(version, _options =>
+                services.AddOpenApi(version, options =>
                 {
                     //Versioning config
-                    _options.AddDocumentTransformer<VersionInfoTransformer>();
+                    options.AddDocumentTransformer<VersionInfoTransformer>();
 
                     //Security Scheme config
-                    _options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-                    _options.AddOperationTransformer<BearerSecuritySchemeTransformer>();
+                    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+                    options.AddOperationTransformer<BearerSecuritySchemeTransformer>();
                 });
             }
             return services;

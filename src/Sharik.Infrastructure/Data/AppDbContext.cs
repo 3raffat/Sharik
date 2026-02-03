@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Sharik.Application.Common.Interfaces;
+using Sharik.Domain.Auth;
 using Sharik.Domain.Exchanges;
 using Sharik.Domain.Ratings;
 using Sharik.Domain.Skills;
@@ -25,5 +26,6 @@ namespace Sharik.Infrastructure.Data
         public DbSet<Exchange> Exchanges => Set<Exchange>();
         public DbSet<Rating> Ratings => Set<Rating>();
 
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     }
 }

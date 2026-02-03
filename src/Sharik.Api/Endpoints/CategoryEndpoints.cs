@@ -8,6 +8,7 @@ using Sharik.Application.Featuers.SkillCategories.Commands.DeleteSkillCategory;
 using Sharik.Application.Featuers.SkillCategories.Commands.UpdateSkillCategory;
 using Sharik.Application.Featuers.SkillCategories.Dtos;
 using Sharik.Domain.Common.Results;
+using Sharik.Domain.User.Enums;
 
 namespace Sharik.Api.Endpoints
 {
@@ -18,19 +19,26 @@ namespace Sharik.Api.Endpoints
             var endpoints = app.MapGroup("/api/v{version:apiVersion}/skill-category")
                 .WithApiVersionSet(set)
                 .HasApiVersion(1.0)
-                .WithTags("Admin:Category");
+                .WithTags("Admin:Category")
+                .RequireAuthorization(policy =>
+                   policy.RequireRole(nameof(Role.Admin)));
 
             endpoints.MapPost("", CreateCategory);
 
-            endpoints.MapDelete("{id:guid}", DeleteCategory);
+            endpoints.MapDelete("{categoryId:guid}", DeleteCategory);
 
-            endpoints.MapPut("{id:guid}", UpdateCategory);
+            endpoints.MapPut("{categoryId:guid}", UpdateCategory);
 
         }
 
-        private static async Task<IResult> UpdateCategory([FromRoute] Guid id, [FromBody] UpdateCategoryRequest request, ISender sender, CancellationToken ct)
+        private static async Task<IResult> UpdateCategory([FromRoute] Guid categoryId,
+                                                          [FromBody] UpdateCategoryRequest request,
+                                                          ISender sender,
+                                                          CancellationToken ct)
         {
-            var result = await sender.Send(new UpdateSkillCategoryCommand(id, request.Name), ct);
+
+            var result = await sender.Send(new UpdateSkillCategoryCommand(categoryId,
+                                                                          request.Name), ct);
 
             return result.Match(value => Results.Ok(new StandardSuccessResponse<SkillCategoryDto>(Data: value,
                 Status: StatusCodes.Status200OK,
@@ -39,9 +47,12 @@ namespace Sharik.Api.Endpoints
 
         }
 
-        private static async Task<IResult> DeleteCategory([FromRoute] Guid id, ISender sender, CancellationToken ct)
+        private static async Task<IResult> DeleteCategory([FromRoute] Guid categoryId,
+                                                          ISender sender,
+                                                          CancellationToken ct)
         {
-            var result = await sender.Send(new DeleteSkillCategoryCommand(id), ct);
+
+            var result = await sender.Send(new DeleteSkillCategoryCommand(categoryId), ct);
 
             return result.Match(value => Results.Ok(new StandardSuccessResponse<Deleted>(Data: value,
                 Status: StatusCodes.Status200OK,
@@ -50,7 +61,9 @@ namespace Sharik.Api.Endpoints
 
         }
 
-        private static async Task<IResult> CreateCategory([FromBody] CreateCategoryRequest request, ISender sender, CancellationToken ct)
+        private static async Task<IResult> CreateCategory([FromBody] CreateCategoryRequest request,
+                                                          ISender sender,
+                                                          CancellationToken ct)
         {
 
             var result = await sender.Send(new CreateSkillCategoryCommand(request.Name), ct);

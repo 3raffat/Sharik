@@ -29,12 +29,12 @@ namespace Sharik.Infrastructure.Data.Configuration
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(r => r.Rater)
-                   .WithMany()
+                   .WithMany(r=>r.GivenRatings)
                    .HasForeignKey(r => r.RaterId)
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(r => r.RatedUser)
-                   .WithMany()
+                   .WithMany(r=>r.ReceivedRatings)
                    .HasForeignKey(r => r.RatedUserId)
                    .OnDelete(DeleteBehavior.Cascade);
 
