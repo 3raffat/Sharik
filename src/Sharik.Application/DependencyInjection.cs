@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Sharik.Application.Common.Behaviors;
+using Sharik.Application.Common.Interfaces;
 using System.Reflection;
 
 namespace Sharik.Application;

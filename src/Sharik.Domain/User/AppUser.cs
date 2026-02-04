@@ -113,5 +113,8 @@ namespace Sharik.Infrastructure.Auth
 
             return Result.Success;
         }
+
+        public string GetIdString() => Id.ToString();
+
     }
 }

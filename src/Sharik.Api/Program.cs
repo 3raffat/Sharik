@@ -27,8 +27,13 @@ if (app.Environment.IsDevelopment())
         options.EnableFilter();
 
     });
+    await app.InitialiseDatabaseAsync();
 }
-
+using (var scope = app.Services.CreateScope())
+{
+    var httpContextAccessor = scope.ServiceProvider
+        .GetRequiredService<IHttpContextAccessor>();
+}
 app.UseCoreMiddlewares();
 
 app.MapAllEndpoints();

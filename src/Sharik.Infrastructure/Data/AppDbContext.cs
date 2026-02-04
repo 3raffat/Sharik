@@ -8,11 +8,12 @@ using Sharik.Domain.Ratings;
 using Sharik.Domain.Skills;
 using Sharik.Domain.Skills.SkillCategories;
 using Sharik.Domain.Skills.UserSkills;
+using Sharik.Domain.User;
 using Sharik.Infrastructure.Auth;
 
 namespace Sharik.Infrastructure.Data
 {
-    public sealed class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>, IAppDbContext
+    public sealed class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>, IAppDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder builder)

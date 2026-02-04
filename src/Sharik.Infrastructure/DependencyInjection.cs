@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Sharik.Application.Common.Interfaces;
+using Sharik.Domain.User;
 using Sharik.Infrastructure.Auth;
 using Sharik.Infrastructure.Data;
 using Sharik.Infrastructure.Data.Interceptors;
@@ -52,6 +53,10 @@ public static class DependencyInjection
 
         services.AddScoped<ITokenProvider, TokenProvider>();
 
+        services.AddScoped<IUserService, UserService>();
+
+        services.AddScoped<ApplicationDbContextInitialiser>();
+
         return services;
     }
 
@@ -76,7 +81,7 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
 
         }).AddIdentityCore<AppUser>()
-        .AddRoles<IdentityRole<Guid>>()
+        .AddRoles<AppRole>()
         .AddEntityFrameworkStores<AppDbContext>();
 
         services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
