@@ -36,6 +36,46 @@ namespace Sharik.Domain.Ratings
 
         public static Result<Rating> Create(Guid exchangeId, Guid raterId, Guid ratedUserId, int score, string? comment, RatingType type)
         {
+            var validation = Validate(exchangeId, raterId, ratedUserId, score, comment, type);
+
+            if (validation.IsFailure)
+                return validation.Errors;
+
+            return new Rating(exchangeId, raterId, ratedUserId, score, comment, type);
+        }
+
+        public Result<Updated> Update(int score, string? comment)
+        {
+            var validation = Validate(score, comment);
+
+            if (validation.IsFailure)
+                return validation.Errors;
+
+            Score = score;
+            Comment = comment;
+
+            return Result.Updated;
+        }
+
+        private static Result<Success> Validate(int score, string? comment)
+        {
+            if (score < 1 || score > 5)
+                return RatingErrors.ScoreOutOfRange;
+
+            if (comment != null && comment.Length > 500)
+                return RatingErrors.CommentTooLong;
+
+            return Result.Success;
+        }
+
+        private static Result<Success> Validate(Guid exchangeId,
+                                                Guid raterId,
+                                                Guid ratedUserId,
+                                                int score,
+                                                string? comment,
+                                                RatingType type)
+        {
+
             if (exchangeId == Guid.Empty)
                 return RatingErrors.ExchangeIdRequired;
 
@@ -45,33 +85,14 @@ namespace Sharik.Domain.Ratings
             if (ratedUserId == Guid.Empty)
                 return RatingErrors.RatedUserIdRequired;
 
-            if (score < 1 || score > 5)
-                return RatingErrors.ScoreOutOfRange;
-
             if (raterId == ratedUserId)
                 return RatingErrors.CannotRateSelf;
 
             if (!Enum.IsDefined(type))
                 return RatingErrors.InvalidRatingType;
 
-            if (comment != null && comment.Length > 500)
-                return RatingErrors.CommentTooLong;
-
-            return new Rating(exchangeId, raterId, ratedUserId, score, comment, type);
+            return Validate(score, comment);
         }
 
-        public Result<Updated> Update(int score, string? comment)
-        {
-            if (score < 1 || score > 5)
-                return RatingErrors.ScoreOutOfRange;
-
-            if (comment != null && comment.Length > 500)
-                return RatingErrors.CommentTooLong;
-
-            Score = score;
-            Comment = comment;
-
-            return Result.Updated;
-        }
     }
 }

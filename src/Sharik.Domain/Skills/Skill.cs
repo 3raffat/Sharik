@@ -14,7 +14,7 @@ namespace Sharik.Domain.Skills
         private readonly List<Exchange> _offeredExchanges = new();
         public IEnumerable<Exchange> OfferedExchanges => _offeredExchanges;
 
-        private readonly List<Exchange> _requestedExchanges  = new();   
+        private readonly List<Exchange> _requestedExchanges = new();
         public IEnumerable<Exchange> RequestedExchanges => _requestedExchanges;
 
         private readonly List<UserSkill> _userSkills = new();
@@ -34,7 +34,31 @@ namespace Sharik.Domain.Skills
         public static Result<Skill> Create(Guid categoryId,
                                            string name)
         {
-    
+            var validation = Validate(name, categoryId);
+
+            if (validation.IsFailure)
+                return validation.Errors;
+
+            return new Skill(Guid.NewGuid(), categoryId, name.Trim());
+        }
+
+        public Result<Updated> Update(string name,
+                                      Guid categoryId)
+        {
+
+            var validation = Validate(name, categoryId);
+
+            if (validation.IsFailure)
+                return validation.Errors;
+
+            Name = name.Trim();
+            SkillCategoryId = categoryId;
+
+            return Result.Updated;
+        }
+        private static Result<Success> Validate(string name,
+                                      Guid categoryId)
+        {
             if (categoryId == Guid.Empty)
                 return SkillCategoryErrors.SkillCategoryIdRequired;
 
@@ -44,26 +68,10 @@ namespace Sharik.Domain.Skills
             if (name.Length < 3)
                 return SkillErrors.SkillNameTooShort;
 
-            if (name.Length > 100) 
+            if (name.Length > 100)
                 return SkillErrors.SkillNameTooLong;
 
-            return new Skill(Guid.NewGuid(), categoryId, name.Trim());
-        }
-
-        public Result<Updated> Update(string name,
-                                      Guid categoryId)
-        {
-
-            if (string.IsNullOrWhiteSpace(name))
-                return SkillErrors.SkillNameRequired;
-
-            if (categoryId == Guid.Empty)
-                return SkillCategoryErrors.SkillCategoryIdRequired;
-
-            Name = name.Trim();
-            SkillCategoryId = categoryId;
-
-            return Result.Updated;
+            return Result.Success;
         }
     }
 }

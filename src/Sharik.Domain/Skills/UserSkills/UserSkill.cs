@@ -24,7 +24,7 @@ namespace Sharik.Domain.Skills.UserSkills
                           Guid userId,
                           Guid skillId,
                           SkillLevel skillLevel,
-                          int pointPerHour):base(id)
+                          int pointPerHour) : base(id)
         {
             UserId = userId;
             SkillId = skillId;
@@ -38,33 +38,54 @@ namespace Sharik.Domain.Skills.UserSkills
                                                int pointPerHour)
         {
 
+            var validation = Validate(userId, skillId, skillLevel, pointPerHour);
+
+            if (validation.IsFailure)
+                return validation.Errors;
+
+            return new UserSkill(Guid.NewGuid(), userId, skillId, skillLevel, pointPerHour);
+        }
+
+        public Result<Updated> Update(SkillLevel skillLevel,
+                                      int pointPerHour)
+        {
+            var validation = Validate(skillLevel, pointPerHour);
+
+            if (validation.IsFailure)
+                return validation.Errors;
+
+            SkillLevel = skillLevel;
+            PointPerHour = pointPerHour;
+            return Result.Updated;
+        }
+        private static Result<Success> Validate(SkillLevel skillLevel,
+                                                int pointPerHour)
+
+        {
+
+            if (!Enum.IsDefined(skillLevel))
+                return UserSkillErrors.InvalidSkillLevel;
+
+            if (pointPerHour <= 0 || pointPerHour > 100)
+                return UserSkillErrors.PointPerHourInvalid;
+
+            return Result.Success;
+        }
+
+        private static Result<Success> Validate(Guid userId,
+                                                Guid skillId,
+                                                SkillLevel skillLevel,
+                                                int pointPerHour)
+        {
+
             if (userId == Guid.Empty)
                 return UserSkillErrors.UserIdRequired;
 
             if (skillId == Guid.Empty)
                 return SkillErrors.SkillIdRequired;
 
-            if (!Enum.IsDefined(skillLevel))
-                return UserSkillErrors.InvalidSkillLevel;
+            return Validate(skillLevel, pointPerHour);
 
-            if (pointPerHour <= 0 || pointPerHour > 100)
-                return UserSkillErrors.PointPerHourInvalid;
-
-            return new UserSkill(Guid.NewGuid(),userId, skillId, skillLevel, pointPerHour);
-        }
-
-        public Result<Updated> Update(SkillLevel skillLevel,
-                                      int pointPerHour)
-        {
-            if (!Enum.IsDefined(skillLevel))
-                return UserSkillErrors.InvalidSkillLevel;
-
-            if (pointPerHour <= 0 || pointPerHour > 100)
-                return UserSkillErrors.PointPerHourInvalid;
-
-            SkillLevel = skillLevel;
-            PointPerHour = pointPerHour;
-            return Result.Updated;
         }
     }
 }

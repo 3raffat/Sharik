@@ -68,6 +68,34 @@ namespace Sharik.Domain.Exchanges
                                               string? requesterMessage,
                                               ExchangeStatus exchangeStatus)
         {
+
+            var validation = Validate(requesterId,
+                                      providerId,
+                                      skillOfferedId,
+                                      skillRequestedId,
+                                      type,
+                                      duration,
+                                      pointsValue,
+                                      requesterMessage,
+                                      exchangeStatus);
+
+            if (validation.IsFailure)
+                return validation.Errors;
+
+            return new Exchange(requesterId, providerId, skillOfferedId, skillRequestedId, type, duration, pointsValue, requesterMessage, exchangeStatus);
+        }
+
+
+        private static Result<Success> Validate(Guid requesterId,
+                                              Guid providerId,
+                                              Guid skillOfferedId,
+                                              Guid skillRequestedId,
+                                              ExchangeType type,
+                                              int? duration,
+                                              int? pointsValue,
+                                              string? requesterMessage,
+                                              ExchangeStatus exchangeStatus)
+        {
             if (requesterId == Guid.Empty)
                 return ExchangeErrors.RequesterIdRequired;
 
@@ -92,7 +120,8 @@ namespace Sharik.Domain.Exchanges
             if (requesterMessage != null && requesterMessage.Length > 1000)
                 return ExchangeErrors.RequesterMessageTooLong;
 
-            return new Exchange(requesterId, providerId, skillOfferedId, skillRequestedId, type, duration, pointsValue, requesterMessage, exchangeStatus);
+
+            return Result.Success;
         }
 
     }

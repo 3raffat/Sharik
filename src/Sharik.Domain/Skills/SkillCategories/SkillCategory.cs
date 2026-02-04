@@ -18,34 +18,39 @@ namespace Sharik.Domain.Skills.SkillCategories
         }
         public static Result<SkillCategory> Create(string name)
         {
-          
-            if (string.IsNullOrWhiteSpace(name))
-                return SkillCategoryErrors.SkillCategoryNameRequired;
 
-            if (name.Length < 3)
-                return SkillCategoryErrors.SkillCategoryNameTooShort;
+            var validation = Validate(name);
 
-            if (name.Length > 20)
-                return SkillCategoryErrors.SkillCategoryNameTooLong;
-
+            if (validation.IsFailure)
+                return validation.Errors;
 
             return new SkillCategory(Guid.NewGuid(), name.Trim());
         }
         public Result<Updated> Update(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                return SkillCategoryErrors.SkillCategoryNameRequired;
+            var validation = Validate(name);
 
-            if (name.Length < 3)
-                return SkillCategoryErrors.SkillCategoryNameTooShort;
-
-            if (name.Length > 20)
-                return SkillCategoryErrors.SkillCategoryNameTooLong;
+            if (validation.IsFailure)
+                return validation.Errors;
 
             Name = name.Trim();
 
             return Result.Updated;
         }
 
+        private static Result<Success> Validate(string name)
+        {
+
+            if (string.IsNullOrWhiteSpace(name))
+                return SkillCategoryErrors.SkillCategoryNameRequired;
+
+            if (name.Length < 3)
+                return SkillCategoryErrors.SkillCategoryNameTooShort;
+
+            if (name.Length > 20)
+                return SkillCategoryErrors.SkillCategoryNameTooLong;
+
+            return Result.Success;
+        }
     }
 }

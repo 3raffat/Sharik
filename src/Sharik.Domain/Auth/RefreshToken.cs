@@ -22,23 +22,26 @@ namespace Sharik.Domain.Auth
 
         public static Result<RefreshToken> Create( string? token, string? userId, DateTimeOffset expiresOnUtc)
         {
+            var validation = Validate(token, userId, expiresOnUtc);
 
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                return RefreshTokenErrors.TokenRequired;
-            }
-
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                return RefreshTokenErrors.UserIdRequired;
-            }
-
-            if (expiresOnUtc <= DateTimeOffset.UtcNow)
-            {
-                return RefreshTokenErrors.ExpiryInvalid;
-            }
+            if (validation.IsFailure)
+                return validation.Errors;
 
             return new RefreshToken(Guid.NewGuid(), token, userId, expiresOnUtc);
+        }
+
+        private static Result<Success> Validate(string? token, string? userId, DateTimeOffset expiresOnUtc)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+                return RefreshTokenErrors.TokenRequired;
+            
+            if (string.IsNullOrWhiteSpace(userId))
+                return RefreshTokenErrors.UserIdRequired;
+            
+            if (expiresOnUtc <= DateTimeOffset.UtcNow)
+                return RefreshTokenErrors.ExpiryInvalid;
+            
+            return Result.Success;
         }
     }
 }
