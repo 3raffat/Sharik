@@ -3,7 +3,7 @@ using Sharik.Api.OpenApi;
 using Sharik.Api.Services;
 using Sharik.Application.Common.Interfaces;
 
-namespace Sharik.Api.Extensions
+namespace Sharik.Api
 {
     public static class DependencyInjection
     {
@@ -39,12 +39,13 @@ namespace Sharik.Api.Extensions
             {
                 services.AddOpenApi(version, options =>
                 {
-                    //Versioning config
+                    // Versioning config
                     options.AddDocumentTransformer<VersionInfoTransformer>();
 
-                    //Security Scheme config
+                    // Security Scheme config
                     options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-                    options.AddOperationTransformer<BearerSecuritySchemeTransformer>();
+
+                    options.AddOperationTransformer<BearerSecurityOperationTransformer>();
                 });
             }
             return services;

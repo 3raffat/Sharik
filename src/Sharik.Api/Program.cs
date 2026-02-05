@@ -1,3 +1,4 @@
+using Sharik.Api;
 using Sharik.Api.Endpoints;
 using Sharik.Api.Extensions;
 using Sharik.Application;

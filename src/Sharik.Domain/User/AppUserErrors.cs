@@ -59,14 +59,14 @@ namespace Sharik.Domain.User
 
         public static Error BioTooShort =>
          Error.Validation(
-             code: "Skill.Bio.TooShort",
-             description: "Skill name must be at least 50 characters long."
+             code: "AppUser.Bio.TooShort",
+             description: "Bio must be at least 50 characters long."
          );
 
         public static Error BioTooLong =>
            Error.Validation(
-               code: "Skill.Bio.TooLong",
-               description: "Skill name cannot exceed 500 characters."
+               code: "AppUser.Bio.TooLong",
+               description: "Bio cannot exceed 500 characters."
            );
 
         public static Error ProfileAlreadyComplete =>
