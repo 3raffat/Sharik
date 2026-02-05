@@ -7,6 +7,7 @@ using Sharik.Application.Featuers.UserSkills.Dtos;
 using Sharik.Application.Featuers.UserSkills.Mapper;
 using Sharik.Domain.Common.Results;
 using Sharik.Domain.Skills.UserSkills;
+using Sharik.Domain.User.Enums;
 
 namespace Sharik.Application.Featuers.UserSkills.Commands.CreateUserSkill
 {
@@ -17,7 +18,16 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.CreateUserSkill
     {
         public async Task<Result<UserSkillDto>> Handle(CreateUserSkillCommand request, CancellationToken ct)
         {
-           
+
+            var isIncompleteProfile = await _context.Users
+                .AnyAsync(u => u.Id == request.userId && u.ProfileStatus == ProfileStatus.Incomplete, ct);
+
+            if (isIncompleteProfile)
+            {
+                _logger.LogInformation("User {UserId} profile is incomplete.", request.userId);
+                return ApplicationErrors.ProfileIncomplete;
+            }
+
             var existSkill = await _context.Skills.AnyAsync(us => us.Id == request.skillId, ct);
 
             if (!existSkill)
@@ -31,7 +41,7 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.CreateUserSkill
 
             if (hasSkill)
             {
-                _logger.LogWarning("User {UserId} already has Skill {SkillId}", request.userId,request.skillId);
+                _logger.LogWarning("User {UserId} already has Skill {SkillId}", request.userId, request.skillId);
                 return ApplicationErrors.SkillAlreadyExistsForUser;
             }
 

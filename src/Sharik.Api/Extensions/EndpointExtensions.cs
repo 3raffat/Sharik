@@ -12,10 +12,10 @@ namespace Sharik.Api.Extensions
                 .Build();
 
             app.MapAuthEndpoints(apiVersionSet);
+            app.MapUserEndpoints(apiVersionSet);
+            app.MapUserSkillEndpoints(apiVersionSet);
             app.MapSkillEndpoints(apiVersionSet);
             app.MapCategoryEndpoints(apiVersionSet);
-            app.MapUserSkillEndpoints(apiVersionSet);
-            app.MapUserEndpoints(apiVersionSet);
             return app;
         }
 

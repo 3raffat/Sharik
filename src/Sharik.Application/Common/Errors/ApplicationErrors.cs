@@ -32,5 +32,10 @@ namespace Sharik.Application.Common.Errors
         public static Error UserSkillNotFound => Error.NotFound(
             code: "UserSkill.NotFound",
             description: "The Skill with the specified ID was not found.");
+
+        public static Error ProfileIncomplete => Error.Conflict(
+            code: "AppUser.Profile.Incomplete",
+            description: "Profile is still incomplete."
+       );
     }
 }

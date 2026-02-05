@@ -21,7 +21,7 @@ namespace Sharik.Api.Endpoints
                 .HasApiVersion(1.0)
                 .WithTags("Admin:Skills")
                 .RequireAuthorization(policy =>
-                   policy.RequireRole(nameof(Role.Admin)));
+                   policy.RequireRole(nameof(Role.Admin),nameof(Role.SuperAdmin)));
 
             endpoints.MapPost("", CreateSkill);
 
