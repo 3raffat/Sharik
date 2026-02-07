@@ -2,7 +2,7 @@
 using Sharik.Domain.Skills;
 using Sharik.Domain.Skills.SkillCategories;
 
-namespace Sharik.Application.Featuers.Skills.Commands.CreateSkill
+namespace Sharik.Application.Featuers.SkillCategories.Commands.CreateSkill
 {
     public sealed class CreateSkillCommandValidator : AbstractValidator<CreateSkillCommand>
     {

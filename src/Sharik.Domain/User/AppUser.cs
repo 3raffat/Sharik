@@ -69,7 +69,22 @@ namespace Sharik.Infrastructure.Auth
 
             return Result.Updated;
         }
+        public Result<Updated> UpdateProfile(string firstName, string lastName, string bio)
+        {
+            if (ProfileStatus == ProfileStatus.Incomplete)
+                return AppUserErrors.ProfileIncomplete;
 
+            var validation = Validate(firstName, lastName, bio);
+
+            if (validation.IsFailure)
+                return validation.Errors;
+
+            FirstName = firstName;
+            LastName = lastName;
+            Bio = bio;
+
+            return Result.Updated;
+        }
         private static Result<Success> Validate(string username, string email)
         {
             if (string.IsNullOrWhiteSpace(username))

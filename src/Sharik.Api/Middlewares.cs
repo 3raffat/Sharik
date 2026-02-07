@@ -1,4 +1,4 @@
-﻿namespace Sharik.Api.Extensions
+﻿namespace Sharik.Api
 {
     public static class Middlewares
     {

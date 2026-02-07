@@ -73,5 +73,11 @@ namespace Sharik.Domain.User
             Error.Conflict(
                code: "AppUser.Profile.AlreadyComplete",
                description: "Profile has already been completed.");
+
+        public static Error ProfileIncomplete =>
+          Error.Conflict(
+              code: "AppUser.Profile.Incomplete",
+              description: "The user profile must be completed before performing this action."
+          );
     }
 }

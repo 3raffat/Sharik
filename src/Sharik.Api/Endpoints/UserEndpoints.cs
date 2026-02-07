@@ -6,6 +6,7 @@ using Sharik.Application.Common.Interfaces;
 using Sharik.Application.Common.Responses;
 using Sharik.Application.Featuers.User.CompleteProfile;
 using Sharik.Application.Featuers.User.Dtos;
+using Sharik.Application.Featuers.User.UpdateProfile;
 using Sharik.Domain.Common.Results;
 
 namespace Sharik.Api.Endpoints
@@ -22,18 +23,40 @@ namespace Sharik.Api.Endpoints
 
             endpoints.MapPost("profile", CompleteProfile);
 
+            endpoints.MapPut("profile", UpdateProfile);
+
         }
 
-        private static async Task<IResult> CompleteProfile(ISender sender, IUser user, [FromBody] CompleteProfileRequest request, CancellationToken ct)
+        private static async Task<IResult> CompleteProfile(ISender sender,
+                                                           IUser user,
+                                                           [FromBody] CompleteProfileRequest request,
+                                                           CancellationToken ct)
         {
             var result = await sender.Send(new CompleteProfileCommand(user.UserId,
                                                                       request.FirstName,
                                                                       request.LastName,
                                                                       request.Bio), ct);
-           
+
             return result.Match(value => Results.Ok(new StandardSuccessResponse<Updated>(Data: value,
                Status: StatusCodes.Status200OK,
                Message: "complete profile successfully")),
+               errors => errors.ToProblem());
+
+        }
+
+        private static async Task<IResult> UpdateProfile(ISender sender,
+                                                           IUser user,
+                                                           [FromBody] UpdateProfileRequest request,
+                                                           CancellationToken ct)
+        {
+            var result = await sender.Send(new UpdateProfileCommand(user.UserId,
+                                                                      request.FirstName,
+                                                                      request.LastName,
+                                                                      request.Bio), ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<Updated>(Data: value,
+               Status: StatusCodes.Status200OK,
+               Message: "update profile successfully")),
                errors => errors.ToProblem());
 
         }

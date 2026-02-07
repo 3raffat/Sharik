@@ -1,7 +1,8 @@
-﻿using Sharik.Application.Featuers.Skills.Dtos;
+﻿using Sharik.Application.Featuers.SkillCategories.Dtos;
+using Sharik.Application.Featuers.SkillCategories.Mappers;
 using Sharik.Domain.Skills;
 
-namespace Sharik.Application.Featuers.Skills.Mapper
+namespace Sharik.Application.Featuers.SkillCategories.Mappers
 {
     public static class SkillMapper
     {

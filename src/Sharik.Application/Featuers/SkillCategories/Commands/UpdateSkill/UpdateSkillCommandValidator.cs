@@ -2,7 +2,7 @@
 using Sharik.Domain.Skills;
 using Sharik.Domain.Skills.SkillCategories;
 
-namespace Sharik.Application.Featuers.Skills.Commands.UpdateSkill
+namespace Sharik.Application.Featuers.SkillCategories.Commands.UpdateSkill
 {
     public sealed class UpdateSkillCommandValidator : AbstractValidator<UpdateSkillCommand>
     {

@@ -16,7 +16,7 @@ namespace Sharik.Api.Endpoints
     {
         public static void MapCategoryEndpoints(this IEndpointRouteBuilder app, ApiVersionSet set)
         {
-            var endpoints = app.MapGroup("/api/v{version:apiVersion}/skill-category")
+            var endpoints = app.MapGroup("/api/v{version:apiVersion}/categories")
                 .WithApiVersionSet(set)
                 .HasApiVersion(1.0)
                 .WithTags("Admin:Category")

@@ -3,10 +3,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Sharik.Api.Extensions;
 using Sharik.Application.Common.Responses;
-using Sharik.Application.Featuers.Skills.Commands.CreateSkill;
-using Sharik.Application.Featuers.Skills.Commands.DeleteSkill;
-using Sharik.Application.Featuers.Skills.Commands.UpdateSkill;
-using Sharik.Application.Featuers.Skills.Dtos;
+using Sharik.Application.Featuers.SkillCategories.Commands.CreateSkill;
+using Sharik.Application.Featuers.SkillCategories.Commands.DeleteSkill;
+using Sharik.Application.Featuers.SkillCategories.Commands.UpdateSkill;
+using Sharik.Application.Featuers.SkillCategories.Dtos;
 using Sharik.Domain.Common.Results;
 using Sharik.Domain.User.Enums;
 
@@ -16,26 +16,27 @@ namespace Sharik.Api.Endpoints
     {
         public static void MapSkillEndpoints(this IEndpointRouteBuilder app, ApiVersionSet set)
         {
-            var endpoints = app.MapGroup("/api/v{version:apiVersion}/skills")
+            var endpoints = app.MapGroup("/api/v{version:apiVersion}/categories")
                 .WithApiVersionSet(set)
                 .HasApiVersion(1.0)
-                .WithTags("Admin:Skills")
+                .WithTags("Admin:Skill")
                 .RequireAuthorization(policy =>
-                   policy.RequireRole(nameof(Role.Admin),nameof(Role.SuperAdmin)));
+                   policy.RequireRole(nameof(Role.Admin), nameof(Role.SuperAdmin)));
 
-            endpoints.MapPost("", CreateSkill);
+            endpoints.MapPost("{categoryId:guid}/skills", CreateSkill);
 
-            endpoints.MapDelete("{skillId:guid}", DeleteSkill);
+            endpoints.MapDelete("{categoryId:guid}/skills/{skillId:guid}", DeleteSkill);
 
-            endpoints.MapPut("{skillId:guid}", UpdateSkill);
+            endpoints.MapPut("{categoryId:guid}/skills/{skillId:guid}", UpdateSkill);
 
         }
         private static async Task<IResult> DeleteSkill(ISender sender,
                                                        [FromRoute] Guid skillId,
+                                                       [FromRoute] Guid categoryId,
                                                        CancellationToken ct)
         {
 
-            var result = await sender.Send(new DeleteSkillCommand(skillId), ct);
+            var result = await sender.Send(new DeleteSkillCommand(skillId, categoryId), ct);
 
             return result.Match(value => Results.Ok(new StandardSuccessResponse<Deleted>(Data: value,
                 Status: StatusCodes.Status200OK,
@@ -46,15 +47,16 @@ namespace Sharik.Api.Endpoints
 
         private static async Task<IResult> UpdateSkill(ISender sender,
                                                        [FromRoute] Guid skillId,
-                                                       [FromBody] CreateSkillRequest request,
+                                                       [FromRoute] Guid categoryId,
+                                                       [FromBody] UpdateSkillRequest request,
                                                        CancellationToken ct)
         {
 
             var result = await sender.Send(new UpdateSkillCommand(skillId,
                                                                   request.Name,
-                                                                  request.CategoryId),ct);
+                                                                  categoryId), ct);
 
-            return result.Match(value => Results.Ok(new StandardSuccessResponse<SkillDto>(
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<Updated>(
                 Data: value,
                 Status: StatusCodes.Status200OK,
                 Message: "Skill updated successfully")),
@@ -63,12 +65,13 @@ namespace Sharik.Api.Endpoints
         }
 
         private static async Task<IResult> CreateSkill(ISender sender,
+                                                       [FromRoute] Guid categoryId,
                                                        [FromBody] CreateSkillRequest request,
                                                        CancellationToken ct)
         {
 
-            var result = await sender.Send(new CreateSkillCommand(request.CategoryId,
-                                                                  request.Name),ct);
+            var result = await sender.Send(new CreateSkillCommand(categoryId,
+                                                                  request.Name), ct);
 
 
             return result.Match(value => Results.Ok(new StandardSuccessResponse<SkillDto>(Data: value,

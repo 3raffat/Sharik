@@ -5,7 +5,7 @@ using Sharik.Application.Common.Errors;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Domain.Common.Results;
 
-namespace Sharik.Application.Featuers.Skills.Commands.DeleteSkill
+namespace Sharik.Application.Featuers.SkillCategories.Commands.DeleteSkill
 {
     public sealed class DeleteSkillCommandHandler(
         ILogger<DeleteSkillCommandHandler> _logger,
@@ -13,17 +13,20 @@ namespace Sharik.Application.Featuers.Skills.Commands.DeleteSkill
     {
         public async Task<Result<Deleted>> Handle(DeleteSkillCommand request, CancellationToken ct)
         {
-            var skill = await _context.Skills.FirstOrDefaultAsync(s => s.Id == request.SkillId,
-                                                                  ct);
+           var category = await _context.SkillCategories
+                .Include(c => c.Skills)
+                .FirstOrDefaultAsync(c => c.Id == request.CategoryId, ct);
 
-            if (skill is null)
+            if (category is null)
             {
-                _logger.LogWarning("Skill with Id: {SkillId} not found", request.SkillId);
-                return ApplicationErrors.SkillNotFound;
+                _logger.LogWarning("Skill category with ID {CategoryId} not found.", request.CategoryId);
+                return ApplicationErrors.SkillCategoryNotFound;
             }
 
+            var skillResult = category.RemoveSkill(request.SkillId);
 
-            _context.Skills.Remove(skill);
+            if (skillResult.IsFailure)
+            return skillResult.Errors;
 
             await _context.SaveChangesAsync(ct);
 

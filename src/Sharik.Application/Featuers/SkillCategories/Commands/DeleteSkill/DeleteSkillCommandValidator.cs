@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Sharik.Domain.Skills;
 
-namespace Sharik.Application.Featuers.Skills.Commands.DeleteSkill
+namespace Sharik.Application.Featuers.SkillCategories.Commands.DeleteSkill
 {
     public sealed class DeleteSkillCommandValidator : AbstractValidator<DeleteSkillCommand>
     {

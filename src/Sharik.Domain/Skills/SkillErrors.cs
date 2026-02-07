@@ -30,5 +30,16 @@ namespace Sharik.Domain.Skills
                 description: "Skill name cannot exceed 100 characters."
             );
 
+        public  static Error SkillNameIsAlreadyExists =>
+            Error.Conflict(
+                code: "Skill.SkillName.AlreadyExists",
+                description: "A skill with the same name already exists."
+            );  
+
+        public static Error SkillNotFound => 
+            Error.NotFound(
+                code: "Skill.NotFound",
+                description: "The specified skill was not found."
+            );
     }
 }

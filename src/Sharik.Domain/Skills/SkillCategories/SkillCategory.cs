@@ -37,6 +37,50 @@ namespace Sharik.Domain.Skills.SkillCategories
 
             return Result.Updated;
         }
+        public Result<Skill> AddSkill(string skillName)
+        {
+            if (_skills.Any(s => s.Name.Equals(skillName, StringComparison.OrdinalIgnoreCase)))
+                return SkillErrors.SkillNameIsAlreadyExists;
+
+            var skillResult = Skill.Create(Id, skillName);
+
+            if (skillResult.IsFailure)
+                return skillResult.Errors;
+
+            _skills.Add(skillResult.Value);
+
+            return skillResult;
+        }
+
+        public Result<Deleted> RemoveSkill(Guid skillId)
+        {
+            var skill = _skills.SingleOrDefault(s => s.Id == skillId);
+
+            if (skill is null)
+                return SkillErrors.SkillNotFound;
+
+            _skills.Remove(skill);
+
+            return Result.Deleted;
+        }
+
+        public Result<Updated> UpdateSkill(Guid skillId, string newName)
+        {
+            var skill = _skills.SingleOrDefault(s => s.Id == skillId);
+
+            if (skill is null)
+                return SkillErrors.SkillNotFound;
+
+            if (_skills.Any(s => s.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
+                return SkillErrors.SkillNameIsAlreadyExists;
+
+            var updateResult = skill.Update(newName);
+
+            if (updateResult.IsFailure)
+                return updateResult.Errors;
+
+            return Result.Updated;
+        }
 
         private static Result<Success> Validate(string name)
         {

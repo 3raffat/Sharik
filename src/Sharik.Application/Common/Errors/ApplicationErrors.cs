@@ -37,5 +37,9 @@ namespace Sharik.Application.Common.Errors
             code: "AppUser.Profile.Incomplete",
             description: "Profile is still incomplete."
        );
+
+        public static Error ExchangeNotFound => Error.NotFound(
+            code: "Exchange.NotFound",
+            description: "The exchange with the specified ID was not found.");
     }
 }

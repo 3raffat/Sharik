@@ -42,25 +42,21 @@ namespace Sharik.Domain.Skills
             return new Skill(Guid.NewGuid(), categoryId, name.Trim());
         }
 
-        public Result<Updated> Update(string name,
-                                      Guid categoryId)
+        public Result<Updated> Update(string name)
         {
 
-            var validation = Validate(name, categoryId);
+            var validation = Validate(name);
 
             if (validation.IsFailure)
                 return validation.Errors;
 
             Name = name.Trim();
-            SkillCategoryId = categoryId;
 
             return Result.Updated;
         }
-        private static Result<Success> Validate(string name,
-                                      Guid categoryId)
+
+        private static Result<Success> Validate(string name)
         {
-            if (categoryId == Guid.Empty)
-                return SkillCategoryErrors.SkillCategoryIdRequired;
 
             if (string.IsNullOrWhiteSpace(name))
                 return SkillErrors.SkillNameRequired;
@@ -72,6 +68,14 @@ namespace Sharik.Domain.Skills
                 return SkillErrors.SkillNameTooLong;
 
             return Result.Success;
+        }
+
+        private static Result<Success> Validate(string name, Guid categoryId)
+        {
+            if (categoryId == Guid.Empty)
+                return SkillCategoryErrors.SkillCategoryIdRequired;
+
+            return Validate(name);
         }
     }
 }
