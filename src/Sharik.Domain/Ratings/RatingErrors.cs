@@ -1,8 +1,4 @@
 ﻿using Sharik.Domain.Common.Results;
-using Sharik.Domain.Ratings.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Sharik.Domain.Ratings
 {
@@ -13,7 +9,7 @@ namespace Sharik.Domain.Ratings
             code: "Exchange.Id.Required"
             , description: "Exchange ID cannot be empty.");
 
-        public static Error RaterIdRequired => Error.Validation( 
+        public static Error RaterIdRequired => Error.Validation(
             code: "Rater.Id.Required"
             , description: "Rater ID cannot be empty.");
 

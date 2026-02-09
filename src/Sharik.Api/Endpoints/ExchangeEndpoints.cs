@@ -5,6 +5,7 @@ using Sharik.Api.Extensions;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Application.Common.Responses;
 using Sharik.Application.Featuers.Exchanges.AcceptExchanges;
+using Sharik.Application.Featuers.Exchanges.AcceptExchanges.CompleteExchanges;
 using Sharik.Application.Featuers.Exchanges.CancelleExchanges;
 using Sharik.Application.Featuers.Exchanges.CreateExchanges;
 using Sharik.Application.Featuers.Exchanges.Dtos;
@@ -29,17 +30,20 @@ namespace Sharik.Api.Endpoints
 
             group.MapPut("{exchangeId:guid}/Cancel" , CancelleExchange);
 
+            group.MapPut("{exchangeId:guid}/Complete" , CompleteExchange);
         }
 
         private static async Task<IResult> AcceptExchange(ISender sender , IUser user , [FromRoute] Guid exchangeId , CancellationToken ct)
         {
             var result = await sender.Send(new AcceptExchangesCommand(exchangeId , user.UserId) , ct);
 
-            return result.Match(value => Results.Ok(new StandardSuccessResponse<Success>(Data: value ,
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<Updated>(Data: value ,
                 Status: StatusCodes.Status200OK ,
                 Message: "Exchange Accepted successfully")) ,
                 errors => errors.ToProblem());
         }
+
+
         private static async Task<IResult> CancelleExchange(ISender sender ,
                                                             IUser user ,
                                                             [FromRoute] Guid exchangeId ,
@@ -48,11 +52,28 @@ namespace Sharik.Api.Endpoints
         {
             var result = await sender.Send(new CancelleExchangesCommand(user.UserId , exchangeId , request.cancellationReason) , ct);
 
-            return result.Match(value => Results.Ok(new StandardSuccessResponse<Success>(Data: value ,
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<Updated>(Data: value ,
                 Status: StatusCodes.Status200OK ,
                 Message: "Exchange Cancelle successfully")) ,
                 errors => errors.ToProblem());
         }
+
+
+        private static async Task<IResult>CompleteExchange(ISender sender ,
+                                                    IUser user ,
+                                                    [FromRoute] Guid exchangeId ,
+                                                    CancellationToken ct)
+        {
+            var result = await sender.Send(new CompleteExchangesCommand(user.UserId , exchangeId) , ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<Updated>(Data: value ,
+                Status: StatusCodes.Status200OK ,
+                Message: "Exchange complete successfully")) ,
+                errors => errors.ToProblem());
+        }
+
+
+
         private async static Task<IResult> CreateExchange(ISender sender ,
                                                     IUser user ,
                                                     [FromBody] CreateExchangeRequest request ,

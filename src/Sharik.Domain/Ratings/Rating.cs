@@ -1,7 +1,6 @@
 ﻿using Sharik.Domain.Common;
 using Sharik.Domain.Common.Results;
 using Sharik.Domain.Exchanges;
-using Sharik.Domain.Ratings.Enums;
 using Sharik.Infrastructure.Auth;
 namespace Sharik.Domain.Ratings
 {
@@ -17,36 +16,34 @@ namespace Sharik.Domain.Ratings
 
         public string? Comment { get; private set; }
 
-        public RatingType Type { get; private set; }
         public Exchange Exchange { get; set; } = null!;
         public AppUser Rater { get; set; } = null!;
         public AppUser RatedUser { get; set; } = null!;
 
         private Rating() { }
 
-        private Rating(Guid exchangeId, Guid raterId, Guid ratedUserId, int score, string? comment, RatingType type)
+        private Rating(Guid exchangeId , Guid raterId , Guid ratedUserId , int score , string? comment)
         {
             ExchangeId = exchangeId;
             RaterId = raterId;
             RatedUserId = ratedUserId;
             Score = score;
             Comment = comment;
-            Type = type;
         }
 
-        public static Result<Rating> Create(Guid exchangeId, Guid raterId, Guid ratedUserId, int score, string? comment, RatingType type)
+        public static Result<Rating> Create(Guid exchangeId , Guid raterId , Guid ratedUserId , int score , string? comment)
         {
-            var validation = Validate(exchangeId, raterId, ratedUserId, score, comment, type);
+            var validation = Validate(exchangeId , raterId , ratedUserId , score , comment);
 
             if (validation.IsFailure)
                 return validation.Errors;
 
-            return new Rating(exchangeId, raterId, ratedUserId, score, comment, type);
+            return new Rating(exchangeId , raterId , ratedUserId , score , comment);
         }
 
-        public Result<Updated> Update(int score, string? comment)
+        public Result<Updated> Update(int score , string? comment)
         {
-            var validation = Validate(score, comment);
+            var validation = Validate(score , comment);
 
             if (validation.IsFailure)
                 return validation.Errors;
@@ -57,7 +54,7 @@ namespace Sharik.Domain.Ratings
             return Result.Updated;
         }
 
-        private static Result<Success> Validate(int score, string? comment)
+        private static Result<Success> Validate(int score , string? comment)
         {
             if (score < 1 || score > 5)
                 return RatingErrors.ScoreOutOfRange;
@@ -68,12 +65,11 @@ namespace Sharik.Domain.Ratings
             return Result.Success;
         }
 
-        private static Result<Success> Validate(Guid exchangeId,
-                                                Guid raterId,
-                                                Guid ratedUserId,
-                                                int score,
-                                                string? comment,
-                                                RatingType type)
+        private static Result<Success> Validate(Guid exchangeId ,
+                                                Guid raterId ,
+                                                Guid ratedUserId ,
+                                                int score ,
+                                                string? comment)
         {
 
             if (exchangeId == Guid.Empty)
@@ -88,10 +84,7 @@ namespace Sharik.Domain.Ratings
             if (raterId == ratedUserId)
                 return RatingErrors.CannotRateSelf;
 
-            if (!Enum.IsDefined(type))
-                return RatingErrors.InvalidRatingType;
-
-            return Validate(score, comment);
+            return Validate(score , comment);
         }
 
     }

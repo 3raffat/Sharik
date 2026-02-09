@@ -100,5 +100,22 @@ namespace Sharik.Domain.Exchanges
         public static Error CannotExchangeSameSkill => Error.Validation(
             code: "Exchange.CannotExchangeSameSkill" ,
             description: "Users cannot exchange the same skill.");
+
+        public static Error CanOnlyCompleteAcceptedExchanges => Error.Conflict(
+            code: "Exchange.CanOnlyCompleteAccepted" ,
+            description: "Only exchanges with an accepted status can be completed.");
+
+        public static Error InsufficientPoints => Error.Validation(
+            code: "Exchange.Points.Insufficient" ,
+            description: "Sorry, you cannot cancel the exchange because your points balance is less than 15.");
+
+        public static Error CanOnlyRateCompletedExchanges => Error.Conflict(
+            code: "Exchange.CanOnlyRateCompleted" ,
+            description: "Only exchanges with a completed status can be rated.");
+
+        public static Error AlreadyRatedExchange => Error.Validation(
+            code: "Exchange.Rating.AlreadyRated" ,
+            description: "You have already rated this exchange.");
+
     }
 }

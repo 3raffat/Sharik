@@ -19,9 +19,7 @@ namespace Sharik.Infrastructure.Data.Configuration
             builder.Property(r => r.Comment)
                    .HasMaxLength(500);
 
-            builder.Property(r => r.Type)
-                   .HasConversion<string>()
-                   .IsRequired();
+        
 
             builder.HasOne(r => r.Exchange)
                    .WithMany(e => e.Ratings)

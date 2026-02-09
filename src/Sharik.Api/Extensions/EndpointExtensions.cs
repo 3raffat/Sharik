@@ -14,6 +14,7 @@ namespace Sharik.Api.Extensions
             app.MapAuthEndpoints(apiVersionSet);
             app.MapUserEndpoints(apiVersionSet);
             app.MapExchangeEndpoints(apiVersionSet);
+            app.MapRatingEndpoints(apiVersionSet);
             app.MapUserSkillEndpoints(apiVersionSet);
             app.MapCategoryEndpoints(apiVersionSet);
             app.MapSkillEndpoints(apiVersionSet);

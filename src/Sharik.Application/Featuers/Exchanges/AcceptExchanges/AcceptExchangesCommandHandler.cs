@@ -9,9 +9,9 @@ namespace Sharik.Application.Featuers.Exchanges.AcceptExchanges
 {
     public sealed class AcceptExchangesCommandHandler(
         ILogger<AcceptExchangesCommandHandler> _logger ,
-        IAppDbContext _context) : IRequestHandler<AcceptExchangesCommand , Result<Success>>
+        IAppDbContext _context) : IRequestHandler<AcceptExchangesCommand , Result<Updated>>
     {
-        public async Task<Result<Success>> Handle(AcceptExchangesCommand request , CancellationToken ct)
+        public async Task<Result<Updated>> Handle(AcceptExchangesCommand request , CancellationToken ct)
         {
             var exchangeExists = await _context.Exchanges.FirstOrDefaultAsync(
                 e => e.Id == request.ExchangeId ,ct);
@@ -32,7 +32,7 @@ namespace Sharik.Application.Featuers.Exchanges.AcceptExchanges
 
             _logger.LogInformation("Exchange with id {ExchangeId} accepted successfully." , request.ExchangeId);
 
-            return Result.Success;
+            return Result.Updated;
         }
     }
 }
