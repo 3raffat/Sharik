@@ -41,5 +41,17 @@ namespace Sharik.Application.Common.Errors
         public static Error ExchangeNotFound => Error.NotFound(
             code: "Exchange.NotFound",
             description: "The exchange with the specified ID was not found.");
+
+        public static Error ProviderNotFound => Error.NotFound(
+             code: "User.NotFound" ,
+             description: "The provider with the specified ID does not exist");
+
+        public static Error ExchangeAlreadyExists => Error.Conflict(
+                code: "Exchange.AlreadyExists" ,
+                description: "An active exchange already exists between the requester and provider for the same skills");
+
+        public static Error Unauthorized => Error.Unauthorized(
+            code: "Unauthorized" ,
+            description: "You are not authorized to perform this action");
     }
 }

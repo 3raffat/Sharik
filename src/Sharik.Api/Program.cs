@@ -1,3 +1,4 @@
+using Scalar.AspNetCore;
 using Sharik.Api;
 using Sharik.Api.Endpoints;
 using Sharik.Api.Extensions;
@@ -17,6 +18,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    app.MapScalarApiReference();
     app.UseDeveloperExceptionPage();
     app.MapOpenApi();
     app.UseSwaggerUI(options =>

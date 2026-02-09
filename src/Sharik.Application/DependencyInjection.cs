@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Sharik.Application.Common.Behaviors;
 using Sharik.Application.Common.Interfaces;
+using Sharik.Application.Featuers.Exchanges.Validation;
 using System.Reflection;
 
 namespace Sharik.Application;
@@ -18,6 +19,7 @@ public static class DependencyInjection
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
 
         });
+        services.AddScoped<IExchangeBusinessValidator , ExchangeBusinessValidator>();
 
         return services;
     }   
