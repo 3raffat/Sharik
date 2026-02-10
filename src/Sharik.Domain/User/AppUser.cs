@@ -5,6 +5,7 @@ using Sharik.Domain.Ratings;
 using Sharik.Domain.Skills.UserSkills;
 using Sharik.Domain.User;
 using Sharik.Domain.User.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.Mail;
 
 namespace Sharik.Infrastructure.Auth
@@ -16,7 +17,8 @@ namespace Sharik.Infrastructure.Auth
         public string? Bio { get; private set; }
         public int TotalPointsEarned { get; private set; }
         public double Rating { get; private set; }
-
+        [NotMapped]
+        public string fullName => $"{FirstName} {LastName}".Trim();
         public ProfileStatus ProfileStatus { get; set; } = ProfileStatus.Incomplete;
 
         private List<Exchange> _providedExchanges = new();

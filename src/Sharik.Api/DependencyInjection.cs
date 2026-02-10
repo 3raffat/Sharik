@@ -1,7 +1,9 @@
 ﻿using Asp.Versioning;
+using Microsoft.Extensions.Options;
 using Sharik.Api.OpenApi;
 using Sharik.Api.Services;
 using Sharik.Application.Common.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace Sharik.Api
 {
@@ -13,7 +15,8 @@ namespace Sharik.Api
             services.AddScoped<IUser,CurrentUser>();
             services.AddHttpContextAccessor();
             services.AddCustomApiVersioning()
-                .AddApiDocumentation();
+                .AddApiDocumentation()
+                .AddJsonConfiguration();
                 return services;
         }
         public static IServiceCollection AddCustomApiVersioning(this IServiceCollection services)
@@ -48,6 +51,18 @@ namespace Sharik.Api
                     options.AddOperationTransformer<BearerSecurityOperationTransformer>();
                 });
             }
+            return services;
+        }
+        public static IServiceCollection AddJsonConfiguration(this IServiceCollection services)
+        {
+            services.ConfigureHttpJsonOptions(options =>
+            {
+                options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); 
+            });
+            
+
+
             return services;
         }
     }

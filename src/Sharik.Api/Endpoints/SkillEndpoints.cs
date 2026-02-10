@@ -7,8 +7,11 @@ using Sharik.Application.Featuers.SkillCategories.Commands.CreateSkill;
 using Sharik.Application.Featuers.SkillCategories.Commands.DeleteSkill;
 using Sharik.Application.Featuers.SkillCategories.Commands.UpdateSkill;
 using Sharik.Application.Featuers.SkillCategories.Dtos;
+using Sharik.Application.Featuers.SkillCategories.Queries.GetSkillsQuery;
 using Sharik.Domain.Common.Results;
 using Sharik.Domain.User.Enums;
+using System.Reflection;
+using static Sharik.Application.Common.Caching.CacheKeys;
 
 namespace Sharik.Api.Endpoints
 {
@@ -16,20 +19,37 @@ namespace Sharik.Api.Endpoints
     {
         public static void MapSkillEndpoints(this IEndpointRouteBuilder app, ApiVersionSet set)
         {
-            var endpoints = app.MapGroup("/api/v{version:apiVersion}/categories")
+            var endpoints = app.MapGroup("/api/v{version:apiVersion}")
                 .WithApiVersionSet(set)
                 .HasApiVersion(1.0)
                 .WithTags("Admin:Skill")
                 .RequireAuthorization(policy =>
                    policy.RequireRole(nameof(Role.Admin), nameof(Role.SuperAdmin)));
 
-            endpoints.MapPost("{categoryId:guid}/skills", CreateSkill);
 
-            endpoints.MapDelete("{categoryId:guid}/skills/{skillId:guid}", DeleteSkill);
+            endpoints.MapPost("/categories{categoryId:guid}/skills" , CreateSkill);
 
-            endpoints.MapPut("{categoryId:guid}/skills/{skillId:guid}", UpdateSkill);
+            endpoints.MapDelete("/categories{categoryId:guid}/skills/{skillId:guid}" , DeleteSkill);
+
+            endpoints.MapPut("/categories{categoryId:guid}/skills/{skillId:guid}" , UpdateSkill);
+
+            endpoints.MapGet("/skills", GetSkills)
+                .WithTags("Public:Skill")
+                .AllowAnonymous();
 
         }
+
+        private static async Task<IResult> GetSkills(ISender sender ,CancellationToken ct)
+        {
+
+            var result = await sender.Send(new GetSkillsQuery() , ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<SkillDto>>(Data: value ,
+                Status: StatusCodes.Status200OK ,
+                Message: "Skills retrieved successfully")) ,
+                errors => errors.ToProblem());
+        }
+
         private static async Task<IResult> DeleteSkill(ISender sender,
                                                        [FromRoute] Guid skillId,
                                                        [FromRoute] Guid categoryId,

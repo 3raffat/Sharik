@@ -2,7 +2,6 @@
 
 namespace Sharik.Domain.Exchanges.Enums
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ExchangeStatus
     {
         Pending,

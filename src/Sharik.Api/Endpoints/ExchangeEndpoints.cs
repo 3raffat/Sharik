@@ -9,6 +9,7 @@ using Sharik.Application.Featuers.Exchanges.AcceptExchanges.CompleteExchanges;
 using Sharik.Application.Featuers.Exchanges.CancelleExchanges;
 using Sharik.Application.Featuers.Exchanges.CreateExchanges;
 using Sharik.Application.Featuers.Exchanges.Dtos;
+using Sharik.Application.Featuers.Exchanges.Queries.GetExchanges;
 using Sharik.Domain.Common.Results;
 
 namespace Sharik.Api.Endpoints
@@ -31,6 +32,19 @@ namespace Sharik.Api.Endpoints
             group.MapPut("{exchangeId:guid}/Cancel" , CancelleExchange);
 
             group.MapPut("{exchangeId:guid}/Complete" , CompleteExchange);
+
+            group.MapGet("" , GetExchanges)
+                .AllowAnonymous();
+        }
+
+        private static async Task<IResult> GetExchanges(ISender sender , CancellationToken ct)
+        {
+            var result = await sender.Send(new GetExchangesQuery() , ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<ExchangeDto>>(Data: value ,
+                Status: StatusCodes.Status200OK ,
+                Message: "Exchange retrieved successfully")) ,
+                errors => errors.ToProblem());
         }
 
         private static async Task<IResult> AcceptExchange(ISender sender , IUser user , [FromRoute] Guid exchangeId , CancellationToken ct)
@@ -59,7 +73,7 @@ namespace Sharik.Api.Endpoints
         }
 
 
-        private static async Task<IResult>CompleteExchange(ISender sender ,
+        private static async Task<IResult> CompleteExchange(ISender sender ,
                                                     IUser user ,
                                                     [FromRoute] Guid exchangeId ,
                                                     CancellationToken ct)

@@ -5,7 +5,6 @@ using System.Text.Json.Serialization;
 
 namespace Sharik.Domain.Common.Results
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ErrorKind
     {
         Failure,
