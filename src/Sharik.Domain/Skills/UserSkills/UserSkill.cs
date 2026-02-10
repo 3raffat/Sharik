@@ -9,7 +9,7 @@ namespace Sharik.Domain.Skills.UserSkills
     {
         public Guid UserId { get; private set; }
         public Guid SkillId { get; private set; }
-        public SkillLevel SkillLevel { get; private set; }
+        public SkillLevel SkillLevel { get; private set; } 
         public int StudentsCount { get; private set; }
         public int TotalEarnings { get; private set; }
         public int PointPerHour { get; private set; }

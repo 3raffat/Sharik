@@ -14,7 +14,6 @@ namespace Sharik.Application.Featuers.Exchanges.RateExchanges
         public async Task<Result<Created>> Handle(RateExchangesCommand request , CancellationToken ct)
         {
             var exchange = await _context.Exchanges.Include(e=>e.Ratings).FirstOrDefaultAsync(e => e.Id == request.exchangeId , ct);
-
             if (exchange is null)
             {
                 _logger.LogWarning("Exchange with id {ExchangeId} not found for rating" , request.exchangeId);
