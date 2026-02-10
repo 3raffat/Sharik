@@ -27,13 +27,21 @@ namespace Sharik.Api.Endpoints
                    policy.RequireRole(nameof(Role.Admin), nameof(Role.SuperAdmin)));
 
 
-            endpoints.MapPost("/categories{categoryId:guid}/skills" , CreateSkill);
+            endpoints.MapPost("/categories{categoryId:guid}/skills" , CreateSkill)
+                .WithSummary("Create a new skill")
+                .WithDescription("Creates a new skill under a specific category");
 
-            endpoints.MapDelete("/categories{categoryId:guid}/skills/{skillId:guid}" , DeleteSkill);
+            endpoints.MapDelete("/categories{categoryId:guid}/skills/{skillId:guid}" , DeleteSkill)
+                 .WithSummary("Delete a skill")
+                 .WithDescription("Deletes an existing skill from a category");
 
-            endpoints.MapPut("/categories{categoryId:guid}/skills/{skillId:guid}" , UpdateSkill);
+            endpoints.MapPut("/categories{categoryId:guid}/skills/{skillId:guid}" , UpdateSkill)
+                 .WithSummary("Update a skill")
+                 .WithDescription("Updates an existing skill in a category");
 
             endpoints.MapGet("/skills", GetSkills)
+                .WithSummary("Get all skills")
+                .WithDescription("Retrieves a list of all available skills (public endpoint)")
                 .WithTags("Public:Skill")
                 .AllowAnonymous();
 

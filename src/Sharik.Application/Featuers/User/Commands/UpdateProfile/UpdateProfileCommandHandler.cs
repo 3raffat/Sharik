@@ -5,7 +5,7 @@ using Sharik.Application.Common.Errors;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Domain.Common.Results;
 
-namespace Sharik.Application.Featuers.User.UpdateProfile
+namespace Sharik.Application.Featuers.User.Commands.UpdateProfile
 {
     public sealed class UpdateProfileCommandHandler(
         ILogger<UpdateProfileCommandHandler> _logger,

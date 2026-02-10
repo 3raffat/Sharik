@@ -9,7 +9,7 @@ using Sharik.Application.Featuers.Exchanges.AcceptExchanges.CompleteExchanges;
 using Sharik.Application.Featuers.Exchanges.CancelleExchanges;
 using Sharik.Application.Featuers.Exchanges.CreateExchanges;
 using Sharik.Application.Featuers.Exchanges.Dtos;
-using Sharik.Application.Featuers.Exchanges.Queries.GetExchanges;
+using Sharik.Application.Featuers.Exchanges.Queries.GetExchangesByProviderId;
 using Sharik.Domain.Common.Results;
 
 namespace Sharik.Api.Endpoints
@@ -25,23 +25,33 @@ namespace Sharik.Api.Endpoints
                 .RequireAuthorization()
                 .WithTags("Exchanges");
 
-            group.MapPost("" , CreateExchange);
+            group.MapPost("" , CreateExchange)
+                 .WithSummary("Create a new exchange")
+                 .WithDescription("Creates a new exchange between users");
 
-            group.MapPut("{exchangeId:guid}/Accept" , AcceptExchange);
+            group.MapPut("{exchangeId:guid}/Accept" , AcceptExchange)
+                .WithSummary("Accept an exchange")
+                .WithDescription("Accepts a pending exchange by its ID");
 
-            group.MapPut("{exchangeId:guid}/Cancel" , CancelleExchange);
+            group.MapPut("{exchangeId:guid}/Cancel" , CancelleExchange)
+                 .WithSummary("Cancel an exchange")
+                 .WithDescription("Cancels an existing exchange by its ID");
 
-            group.MapPut("{exchangeId:guid}/Complete" , CompleteExchange);
+            group.MapPut("{exchangeId:guid}/Complete" , CompleteExchange)
+                .WithName("CompleteExchange")
+                .WithSummary("Complete an exchange")
+                .WithDescription("Marks an exchange as completed by its ID");
 
             group.MapGet("" , GetExchanges)
-                .AllowAnonymous();
+                .WithSummary("Get all exchanges")
+                .WithDescription("Retrieves a list of all exchanges for the authenticated user");
         }
 
-        private static async Task<IResult> GetExchanges(ISender sender , CancellationToken ct)
+        private static async Task<IResult> GetExchanges(ISender sender , IUser user , CancellationToken ct)
         {
-            var result = await sender.Send(new GetExchangesQuery() , ct);
+            var result = await sender.Send(new GetExchangesByProviderIdQuery(user.UserId) , ct);
 
-            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<ExchangeDto>>(Data: value ,
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<ProviderExchangeDto>>(Data: value ,
                 Status: StatusCodes.Status200OK ,
                 Message: "Exchange retrieved successfully")) ,
                 errors => errors.ToProblem());

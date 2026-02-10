@@ -10,6 +10,7 @@ namespace Sharik.Application.Featuers.Exchanges.Mapper
             public ExchangeDto ToDto()
 
             => new(exchange?.Provider?.fullName ,
+                   exchange?.Requester?.fullName ,
                      exchange?.SkillOffered.Name ,
                      exchange?.SkillRequested.Name ,
                      exchange?.Type.ToString() ,

@@ -6,7 +6,7 @@
 
         public static readonly TimeSpan LongExpiration = TimeSpan.FromHours(1);
 
-        public static readonly TimeSpan ShortExpiration = TimeSpan.FromMinutes(5);
+        public static readonly TimeSpan ShortExpiration = TimeSpan.FromMinutes(1);
 
 
         public static class User
@@ -18,7 +18,7 @@
         public static class Exchange
         {
             public const string AllExchanges = "Exchange:All";
-            public static string ExchangeById(Guid id) => $"Exchange:{id}";
+            public static string ExchangeByProviderId(Guid id) => $" Provider Exchange:{id}";
         }
 
         public static class Rating

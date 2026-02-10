@@ -19,7 +19,10 @@ namespace Sharik.Api.Endpoints
                 .HasApiVersion(1.0)
                 .WithTags("User:Rating")
                 .RequireAuthorization();
-            endpoints.MapPost("{exchangeId:guid}/rate", RateExchange);
+
+            endpoints.MapPost("{exchangeId:guid}/rate" , RateExchange)
+                .WithSummary("Rate an exchange")
+                .WithDescription("Submits a rating for a completed exchange");
         }
 
         private static async Task<IResult> RateExchange(ISender sender ,

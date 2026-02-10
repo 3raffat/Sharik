@@ -20,4 +20,8 @@ namespace Sharik.Application.Featuers.UserSkills.Dtos
 
     public sealed record DeleteUserSkillRequest(Guid skillId);
 
+    public sealed record UserSkillsDto(string skillName ,
+                                   SkillLevel skillLevel ,
+                                   int pointPerHour);
+
 }

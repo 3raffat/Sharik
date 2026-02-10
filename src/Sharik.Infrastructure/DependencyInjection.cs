@@ -108,7 +108,7 @@ public static class DependencyInjection
 
             option.DefaultEntryOptions = new HybridCacheEntryOptions
             {
-                Expiration = TimeSpan.FromMinutes(10),
+                Expiration = TimeSpan.FromMinutes(1),
                 LocalCacheExpiration = TimeSpan.FromSeconds(10)
             };
         });

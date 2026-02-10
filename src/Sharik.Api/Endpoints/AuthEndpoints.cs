@@ -20,9 +20,13 @@ namespace Sharik.Api.Endpoints
                 .HasApiVersion(1.0)
                 .WithTags("Authentication");
 
-            group.MapPost("/login", Login);
+            group.MapPost("/login", Login)
+                .WithSummary("User login")
+                .WithDescription("Authenticates a user and returns a JWT token");
 
-            group.MapPost("/register", Register);
+            group.MapPost("/register", Register)
+                   .WithSummary("User registration")
+                   .WithDescription("Registers a new user account");
 
         }
 

@@ -5,7 +5,7 @@ using Sharik.Application.Common.Errors;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Domain.Common.Results;
 
-namespace Sharik.Application.Featuers.User.CompleteProfile
+namespace Sharik.Application.Featuers.User.Commands.CompleteProfile
 {
     public sealed class CompleteProfileCommandHandler(
         ILogger<CompleteProfileCommandHandler> _logger,

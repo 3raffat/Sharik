@@ -24,11 +24,17 @@ namespace Sharik.Api.Endpoints
                 .WithTags("User Skill")
                 .RequireAuthorization();
 
-            endpoints.MapPost("", CreateSkill);
+            endpoints.MapPost("", CreateSkill)
+                .WithSummary("Create a new skill")
+                .WithDescription("Creates a new skill in the system");
 
-            endpoints.MapPut("{skillId:guid}", UpdateSkill);
+            endpoints.MapPut("{skillId:guid}", UpdateSkill)
+                .WithSummary("Update a skill")
+                .WithDescription("Updates an existing skill by its ID");
 
-            endpoints.MapDelete("{skillId:guid}", DeleteSkill);
+            endpoints.MapDelete("{skillId:guid}", DeleteSkill)
+                .WithSummary("Delete a skill")
+                .WithDescription("Deletes an existing skill by its ID");
 
         }
 

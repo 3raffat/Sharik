@@ -23,11 +23,17 @@ namespace Sharik.Api.Endpoints
                 .RequireAuthorization(policy =>
                    policy.RequireRole(nameof(Role.Admin),nameof(Role.SuperAdmin)));
 
-            endpoints.MapPost("", CreateCategory);
+            endpoints.MapPost("", CreateCategory)
+                 .WithSummary("Create a new category")
+                 .WithDescription("Creates a new category in the system");
 
-            endpoints.MapDelete("{categoryId:guid}", DeleteCategory);
+            endpoints.MapDelete("{categoryId:guid}", DeleteCategory)
+                .WithSummary("Delete a category")
+                .WithDescription("Deletes an existing category by its ID");
 
-            endpoints.MapPut("{categoryId:guid}", UpdateCategory);
+            endpoints.MapPut("{categoryId:guid}", UpdateCategory)
+                .WithSummary("Update a category")
+                .WithDescription("Updates an existing category by its ID");
 
         }
 
