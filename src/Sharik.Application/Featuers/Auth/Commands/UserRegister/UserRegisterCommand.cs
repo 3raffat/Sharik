@@ -4,6 +4,6 @@ using Sharik.Domain.Common.Results;
 
 namespace Sharik.Application.Featuers.Auth.Commands.UserRegister
 {
-    public sealed record UserRegisterCommand(string username, string email, string password):IRequest<Result<RegisterUserDto>>;
+    public sealed record UserRegisterCommand(string username, string email, string password):IRequest<Result<Success>>;
 
 }

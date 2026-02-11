@@ -34,6 +34,23 @@ namespace Sharik.Api.Endpoints
                 .WithSummary("Get user profile")
                 .WithDescription("Retrieves the authenticated user's profile information");
 
+            endpoints.MapGet("profile/{userId:guid}" , GetUserProfile)
+                .WithSummary("Get user profile by ID")
+                .WithDescription("Retrieves a user's profile information by their unique identifier");
+
+        }
+
+
+        private static async Task<IResult> GetUserProfile(ISender sender ,
+                                                          [FromRoute] Guid userId ,
+                                                          CancellationToken ct)
+        {
+            var result = await sender.Send(new GetProfileQuery(userId) , ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<CompleteUserProfileDto>(Data: value ,
+               Status: StatusCodes.Status200OK ,
+               Message: "Profile retrieved successfully")) ,
+               errors => errors.ToProblem());
 
         }
 

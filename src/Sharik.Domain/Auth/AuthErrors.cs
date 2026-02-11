@@ -26,5 +26,17 @@ namespace Sharik.Domain.Auth
 
         public static Error UsernameAlreadyExists => Error.Unexpected("Auth.UsernameAlreadyExists",
                                                                        "The username is already taken.");
+
+        public static Error TemplateNotFound => Error.Unexpected("Auth.TemplateNotFound",
+                                                              "The email template could not be found.");
+
+        public static Error EmailNotConfirmed => Error.Unexpected("Auth.EmailNotConfirmed",
+                                                              "The email address has not been confirmed.");
+
+        public static Error UserNotFound => Error.Unexpected("Auth.UserNotFound",
+                                                              "The user was not found.");
+
+        public static Error EmailAlreadyConfirmed => Error.Unexpected("Auth.EmailAlreadyConfirmed",
+                                                              "The email address has already been confirmed.");
     }
 }

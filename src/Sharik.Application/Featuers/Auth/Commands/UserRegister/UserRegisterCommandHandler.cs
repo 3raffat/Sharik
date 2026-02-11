@@ -5,18 +5,17 @@ using Sharik.Domain.Common.Results;
 
 namespace Sharik.Application.Featuers.Auth.Commands.UserRegister
 {
-    public sealed class UserRegisterCommandHandler(IUserService _userService) : IRequestHandler<UserRegisterCommand, Result<RegisterUserDto>>
+    public sealed class UserRegisterCommandHandler(IUserService _userService) : IRequestHandler<UserRegisterCommand, Result<Success>>
     {
-        public async Task<Result<RegisterUserDto>> Handle(UserRegisterCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Success>> Handle(UserRegisterCommand request, CancellationToken cancellationToken)
         {
             var userRegisteResult = await _userService.RegisterAsync(request.username, request.email, request.password, cancellationToken);
 
             if (userRegisteResult.IsFailure)
                 return userRegisteResult.Errors;
 
-            var user = userRegisteResult.Value;
 
-            return user;
+            return Result.Success;
         }
     }
 }

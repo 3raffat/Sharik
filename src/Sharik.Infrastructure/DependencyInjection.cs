@@ -58,6 +58,8 @@ public static class DependencyInjection
 
         services.AddScoped<IUserService , UserService>();
 
+        services.AddScoped<IEmailService , EmailService>();
+
         services.AddScoped<ApplicationDbContextInitialiser>();
 
         return services;
@@ -83,7 +85,12 @@ public static class DependencyInjection
             options.AddInterceptors(interceptors);
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
 
-        }).AddIdentityCore<AppUser>()
+        }).AddIdentityCore<AppUser>(option =>
+        {
+            option.SignIn.RequireConfirmedEmail = true;
+
+        })
+        .AddDefaultTokenProviders()
         .AddRoles<AppRole>()
         .AddEntityFrameworkStores<AppDbContext>();
 
