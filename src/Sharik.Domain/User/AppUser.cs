@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Sharik.Domain.Common;
 using Sharik.Domain.Common.Results;
 using Sharik.Domain.Exchanges;
 using Sharik.Domain.Ratings;
@@ -10,13 +11,15 @@ using System.Net.Mail;
 
 namespace Sharik.Infrastructure.Auth
 {
-    public sealed class AppUser : IdentityUser<Guid>
+    public sealed class AppUser : IdentityUser<Guid> 
     {
         public string? FirstName { get; private set; }
         public string? LastName { get; private set; }
         public string? Bio { get; private set; }
         public int TotalPointsEarned { get; private set; }
         public double Rating { get; private set; }
+        public DateTimeOffset? CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
+
         [NotMapped]
         public string fullName => $"{FirstName} {LastName}".Trim();
         public ProfileStatus ProfileStatus { get; set; } = ProfileStatus.Incomplete;
@@ -40,6 +43,7 @@ namespace Sharik.Infrastructure.Auth
 
         private AppUser(string username, string email)
         {
+            EmailConfirmed = true;
             this.UserName = username;
             this.Email = email;
         }

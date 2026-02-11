@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Domain.User;
 using Sharik.Infrastructure.Auth;
+using Sharik.Infrastructure.BackgroundJobs;
 using Sharik.Infrastructure.Data;
 using Sharik.Infrastructure.Data.Interceptors;
 using System.Text;
@@ -61,6 +62,9 @@ public static class DependencyInjection
         services.AddScoped<IEmailService , EmailService>();
 
         services.AddScoped<ApplicationDbContextInitialiser>();
+
+        services.AddHostedService<CleanupUnVerifiedUsers>();
+
 
         return services;
     }
