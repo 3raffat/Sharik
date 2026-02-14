@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Sharik.Domain.Auth;
 using Sharik.Domain.Exchanges;
+using Sharik.Domain.Notifications;
 using Sharik.Domain.Ratings;
 using Sharik.Domain.Skills;
 using Sharik.Domain.Skills.SkillCategories;
@@ -22,6 +23,7 @@ namespace Sharik.Application.Common.Interfaces
         public DbSet<Rating> Ratings { get; }
         public DbSet<AppUser> Users { get; }
         public DbSet<RefreshToken> RefreshTokens { get; }
+        public DbSet<Notification> Notifications { get; }
 
         Task<int> SaveChangesAsync(CancellationToken ct = default);
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;

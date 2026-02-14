@@ -2,6 +2,7 @@
 using Sharik.Domain.Common;
 using Sharik.Domain.Common.Results;
 using Sharik.Domain.Exchanges;
+using Sharik.Domain.Notifications;
 using Sharik.Domain.Ratings;
 using Sharik.Domain.Skills.UserSkills;
 using Sharik.Domain.User;
@@ -38,12 +39,15 @@ namespace Sharik.Infrastructure.Auth
 
         private readonly List<UserSkill> _userSkills = new();
         public IEnumerable<UserSkill> UserSkills => _userSkills.AsReadOnly();
+
+        private readonly List<Notification> _notification = new();
+        public IEnumerable<Notification> notification => _notification.AsReadOnly();
+
         private AppUser() { }
 
 
         private AppUser(string username, string email)
         {
-            EmailConfirmed = true;
             this.UserName = username;
             this.Email = email;
         }

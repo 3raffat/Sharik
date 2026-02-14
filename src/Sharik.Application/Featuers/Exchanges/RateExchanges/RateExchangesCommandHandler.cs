@@ -4,12 +4,14 @@ using Microsoft.Extensions.Logging;
 using Sharik.Application.Common.Errors;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Domain.Common.Results;
+using Sharik.Domain.Notifications;
+using Sharik.Domain.Notifications.Enums;
 
 namespace Sharik.Application.Featuers.Exchanges.RateExchanges
 {
     public sealed class RateExchangesCommandHandler(
         ILogger<RateExchangesCommandHandler> _logger ,
-        IAppDbContext _context) : IRequestHandler<RateExchangesCommand , Result<Created>>
+        IAppDbContext _context, INotificationApplicationService _notificationService) : IRequestHandler<RateExchangesCommand , Result<Created>>
     {
         public async Task<Result<Created>> Handle(RateExchangesCommand request , CancellationToken ct)
         {
@@ -32,6 +34,12 @@ namespace Sharik.Application.Featuers.Exchanges.RateExchanges
             await _context.SaveChangesAsync(ct);
 
             _logger.LogInformation("Exchange with id {ExchangeId} rated successfully by user {RaterId}" , request.exchangeId , request.raterId);
+
+
+            await _notificationService.CreateAndSendNotificationAsync(request.ratedUserId ,
+                                                                      NotificationType.NewRating ,
+                                                                      NotificationMessage.NewRating(request.score) ,
+                                                                      ct);
 
             return Result.Created;
         }

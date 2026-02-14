@@ -7,6 +7,8 @@ using Sharik.Application.Featuers.SkillCategories.Commands.CreateSkillCategory;
 using Sharik.Application.Featuers.SkillCategories.Commands.DeleteSkillCategory;
 using Sharik.Application.Featuers.SkillCategories.Commands.UpdateSkillCategory;
 using Sharik.Application.Featuers.SkillCategories.Dtos;
+using Sharik.Application.Featuers.SkillCategories.Queries.GetCategory;
+using Sharik.Application.Featuers.SkillCategories.Queries.GetSkillsQuery;
 using Sharik.Domain.Common.Results;
 using Sharik.Domain.User.Enums;
 
@@ -35,6 +37,23 @@ namespace Sharik.Api.Endpoints
                 .WithSummary("Update a category")
                 .WithDescription("Updates an existing category by its ID");
 
+            endpoints.MapGet("", GetCategory)
+                .WithSummary("Get all categories")
+                .WithDescription("Retrieves a list of all available categories (public endpoint)")
+                .WithTags("Public:Category")
+                .AllowAnonymous(); ;
+
+        }
+
+        private static async Task<IResult> GetCategory(ISender sender , CancellationToken ct)
+        {
+
+            var result = await sender.Send(new GetCategoriesQuery() , ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<SkillCategoryDto>>(Data: value ,
+                Status: StatusCodes.Status200OK ,
+                Message: "Categories retrieved successfully")) ,
+                errors => errors.ToProblem());
         }
 
         private static async Task<IResult> UpdateCategory([FromRoute] Guid categoryId,

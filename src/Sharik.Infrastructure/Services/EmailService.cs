@@ -33,8 +33,10 @@ namespace Sharik.Infrastructure.Auth
             var email = new MimeKit.MimeMessage();
 
 
-            email.From.Add(MailboxAddress.Parse(emaillSettings["From"]));
-            email.To.Add(MailboxAddress.Parse(to));
+            var from = new MailboxAddress(emaillSettings["Username"] , emaillSettings["From"]!);
+            var toAddress = MailboxAddress.Parse(to);
+            email.From.Add(from);
+            email.To.Add(toAddress);
             email.Subject = $"{subject} :{to}";
             email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {

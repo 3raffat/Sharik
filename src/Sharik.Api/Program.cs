@@ -1,19 +1,28 @@
 using Scalar.AspNetCore;
 using Sharik.Api;
-using Sharik.Api.Endpoints;
 using Sharik.Api.Extensions;
+using Sharik.Api.Hubs;
 using Sharik.Application;
 using Sharik.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
-builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddJsonFile("appsettings.Local.json" , optional: true , reloadOnChange: true);
 
 builder.Services.AddPresentation()
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy" , policy =>
+    {
+        policy.WithOrigins("http://127.0.0.1:5500") // مصدر HTML
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -23,7 +32,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/openapi/v1.json", " Sharik API V1");
+        options.SwaggerEndpoint("/openapi/v1.json" , " Sharik API V1");
         options.RoutePrefix = string.Empty;
         options.EnableDeepLinking();
         options.DisplayRequestDuration();
@@ -39,7 +48,12 @@ using (var scope = app.Services.CreateScope())
 }
 app.UseCoreMiddlewares();
 
+
+
+app.UseCors("CorsPolicy");
+
 app.MapAllEndpoints();
 
+app.MapHub<NotificationHub>("/notification");
 app.Run();
 

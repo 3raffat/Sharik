@@ -30,7 +30,7 @@ namespace Sharik.Api.Endpoints
                    .WithSummary("User registration")
                    .WithDescription("Registers a new user account");
 
-            group.MapPost("/confirm-email" , ConfirmEmail)
+            group.MapGet("/confirm-email" , ConfirmEmail)
                 .WithSummary("Confirm email")
                 .WithDescription("Confirms a user's email address using a token");
 
@@ -41,12 +41,9 @@ namespace Sharik.Api.Endpoints
 
             var result = await _sender.Send(new ConfirmEmailCommand(userId , token));
 
-                return result.Match(value => Results.Ok(new StandardSuccessResponse<Success>(Data: value ,
-                    Status: StatusCodes.Status200OK ,
-                    Message: "Email confirmed successfully! You can now log in to your account.")) ,
-                    errors => errors.ToProblem());
+            return result.Match(value => Results.Redirect("/system-pages/email-confirmed.html") ,
+                                errors => Results.Redirect("/system-pages/email-error.html"));
 
-            throw new NotImplementedException();
         }
 
         private static async Task<IResult> Register(ISender sender , [FromBody] UserRegisterRequest request)

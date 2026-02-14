@@ -29,22 +29,14 @@ namespace Sharik.Infrastructure.BackgroundJobs
 
                     var cutoffTime = now.AddDays(-1);
 
-                    var unverifiedUsers = await _context.Users
+                    var deletedCount = await _context.Users
                         .Where(u => !u.EmailConfirmed && u.CreatedAtUtc < cutoffTime)
-                        .ToListAsync(stoppingToken);
-                        
+                        .ExecuteDeleteAsync(stoppingToken);
 
-                    if(unverifiedUsers.Any())
-                    {
-                        _context.Users.RemoveRange(unverifiedUsers);
-                        await _context.SaveChangesAsync(stoppingToken);
-                        _logger.LogInformation("Cleaned up {Count} unverified users at {Time}." , unverifiedUsers.Count , _timeProvider.GetLocalNow());
-                    }
-                    else
-                    {
-                        _logger.LogInformation("No unverified users found for cleanup at {Time}." , _timeProvider.GetLocalNow());
-                    }
-
+                    _logger.LogInformation(deletedCount > 0
+                            ? "Deleted {Count} unverified users created before {CutoffTime}."
+                            : "No unverified users found for cleanup." ,
+                        deletedCount , cutoffTime);
                 }
                 catch (Exception ex)
                 {

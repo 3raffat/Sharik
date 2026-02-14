@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sharik.Application.Featuers.Exchanges.AcceptExchanges.CompleteExchanges
+namespace Sharik.Application.Featuers.Exchanges.CompleteExchanges
 {
     public sealed record  CompleteExchangesCommand(Guid ProviderId , Guid ExchangeId):IRequest<Result<Updated>>;
     

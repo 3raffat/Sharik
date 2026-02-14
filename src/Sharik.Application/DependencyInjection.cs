@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Sharik.Application.Common.Behaviors;
 using Sharik.Application.Common.Interfaces;
-using Sharik.Application.Featuers.Exchanges.Validation;
+using Sharik.Application.Common.Services;
 using System.Reflection;
 
 namespace Sharik.Application;
@@ -21,8 +21,9 @@ public static class DependencyInjection
 
 
         });
-        services.AddScoped<IExchangeBusinessValidator , ExchangeBusinessValidator>();
+
+        services.AddScoped<INotificationApplicationService , NotificationApplicationService>();
 
         return services;
-    }   
+    }
 }

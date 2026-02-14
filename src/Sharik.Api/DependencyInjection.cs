@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Sharik.Api.OpenApi;
 using Sharik.Api.Services;
 using Sharik.Application.Common.Interfaces;
+using Sharik.Infrastructure.Services;
 using System.Text.Json.Serialization;
 
 namespace Sharik.Api
@@ -14,6 +15,7 @@ namespace Sharik.Api
         {
             services.AddScoped<IUser,CurrentUser>();
             services.AddHttpContextAccessor();
+            services.AddSignalR();
             services.AddCustomApiVersioning()
                 .AddApiDocumentation()
                 .AddJsonConfiguration();
@@ -60,8 +62,9 @@ namespace Sharik.Api
                 options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); 
             });
-            
 
+
+            services.AddScoped<INotificationService , NotificationService>();
 
             return services;
         }

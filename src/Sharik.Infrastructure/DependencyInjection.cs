@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Domain.User;
@@ -26,7 +25,6 @@ public static class DependencyInjection
                 .AddAuthenticationService(configuration)
                 .AddAuthorizationService()
                 .addCaching(configuration);
-
         return services;
     }
 
@@ -115,11 +113,12 @@ public static class DependencyInjection
             option.CreateIfNotExists = true;
         });
 
-        services.AddHybridCache(option => {
+        services.AddHybridCache(option =>
+        {
 
             option.DefaultEntryOptions = new HybridCacheEntryOptions
             {
-                Expiration = TimeSpan.FromMinutes(1),
+                Expiration = TimeSpan.FromMinutes(1) ,
                 LocalCacheExpiration = TimeSpan.FromSeconds(10)
             };
         });
