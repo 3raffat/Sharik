@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy" , policy =>
     {
-        policy.WithOrigins("http://127.0.0.1:5500") // مصدر HTML
+        policy.WithOrigins("http://localhost:5173" , "https://localhost:5173" , "http://localhost:5174" , "https://localhost:5174")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -46,14 +46,15 @@ using (var scope = app.Services.CreateScope())
     var httpContextAccessor = scope.ServiceProvider
         .GetRequiredService<IHttpContextAccessor>();
 }
+app.UseCors("CorsPolicy");
+
 app.UseCoreMiddlewares();
 
 
 
-app.UseCors("CorsPolicy");
 
 app.MapAllEndpoints();
 
-app.MapHub<NotificationHub>("/notification");
+app.MapHub<NotificationHub>("/notificationHub");
 app.Run();
 

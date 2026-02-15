@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Domain.Auth;
 using Sharik.Domain.Exchanges;
+using Sharik.Domain.Messages;
 using Sharik.Domain.Notifications;
 using Sharik.Domain.Ratings;
 using Sharik.Domain.Skills;
@@ -28,7 +29,7 @@ namespace Sharik.Infrastructure.Data
         public DbSet<Exchange> Exchanges => Set<Exchange>();
         public DbSet<Rating> Ratings => Set<Rating>();
         public DbSet<Notification> Notifications => Set<Notification>();
-
+        public DbSet<Message> Messages => Set<Message>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     }
 }

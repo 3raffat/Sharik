@@ -11,7 +11,7 @@ namespace Sharik.Domain.Notifications
         public static Error UserIdRequired
                 => Error.Validation(
                     code: "Notification.UserId.Required" ,
-                    description: "User ID ."
+                    description: "User ID connot be empty."
                 );
 
         public static Error MassageRequired

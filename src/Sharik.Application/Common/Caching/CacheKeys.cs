@@ -44,5 +44,10 @@
             public const string AllCategories = "Category:All";
             public static string CategoryById(Guid id) => $"Category:{id}";
         }
+        public static class Notification
+        {
+            public const string SystemNotification = "SystemNotfication:All";
+            public static string NotficationByUserId(Guid id) => $"Notification:{id}";
+        }
     }
 }

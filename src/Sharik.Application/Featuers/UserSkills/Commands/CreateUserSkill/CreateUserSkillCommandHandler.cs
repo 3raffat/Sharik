@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
+using Sharik.Application.Common.Caching;
 using Sharik.Application.Common.Errors;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Application.Featuers.UserSkills.Dtos;
@@ -13,7 +15,7 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.CreateUserSkill
 {
     public sealed class CreateUserSkillCommandHandler(
         ILogger<CreateUserSkillCommandHandler> _logger,
-        IAppDbContext _context)
+        IAppDbContext _context,HybridCache _cache)
         : IRequestHandler<CreateUserSkillCommand, Result<UserSkillDto>>
     {
         public async Task<Result<UserSkillDto>> Handle(CreateUserSkillCommand request, CancellationToken ct)
@@ -61,6 +63,10 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.CreateUserSkill
             await _context.SaveChangesAsync(ct);
 
             _logger.LogInformation("User skills created successfully for UserId {UserId}.", userSkill.UserId);
+
+            await _cache.RemoveAsync(CacheKeys.UserSkill.UserSkillById(userSkill.UserId) , ct);
+
+            await _cache.RemoveAsync(CacheKeys.User.UserById(userSkill.UserId) , ct);
 
             return userSkill.ToDto();
         }

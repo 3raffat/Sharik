@@ -1,6 +1,7 @@
 ﻿using Sharik.Domain.Common;
 using Sharik.Domain.Common.Results;
 using Sharik.Domain.Exchanges.Enums;
+using Sharik.Domain.Messages;
 using Sharik.Domain.Ratings;
 using Sharik.Domain.Skills;
 using Sharik.Infrastructure.Auth;
@@ -35,6 +36,8 @@ namespace Sharik.Domain.Exchanges
         public AppUser Provider { get; set; } = null!;
         private readonly List<Rating> _ratings = new();
         public IEnumerable<Rating> Ratings => _ratings.AsReadOnly();
+        private readonly List<Message> _message = new();
+        public IEnumerable<Message> Messages => _message.AsReadOnly();
         private Exchange() { }
 
         private Exchange(Guid requesterId ,

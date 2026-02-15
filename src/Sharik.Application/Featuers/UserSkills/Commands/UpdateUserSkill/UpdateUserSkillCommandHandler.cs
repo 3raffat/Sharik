@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
+using Sharik.Application.Common.Caching;
 using Sharik.Application.Common.Errors;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Application.Featuers.UserSkills.Dtos;
@@ -15,7 +17,7 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.UpdateUserSkill
 {
     public sealed class UpdateUserSkillCommandHandler(
         ILogger<UpdateUserSkillCommandHandler> _logger,
-        IAppDbContext _context) : IRequestHandler<UpdateUserSkillCommand, Result<Updated>>
+        IAppDbContext _context,HybridCache _cache) : IRequestHandler<UpdateUserSkillCommand, Result<Updated>>
     {
         public async Task<Result<Updated>> Handle(UpdateUserSkillCommand request, CancellationToken ct)
         {
@@ -47,6 +49,11 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.UpdateUserSkill
             await _context.SaveChangesAsync(ct);
 
             _logger.LogInformation("User skills updated  successfully for UserId {UserId}.", request.userId);
+
+
+            await _cache.RemoveAsync(CacheKeys.UserSkill.UserSkillById(request.userId) , ct);
+
+            await _cache.RemoveAsync(CacheKeys.User.UserById(request.userId) , ct);
 
             return Result.Updated;
         }

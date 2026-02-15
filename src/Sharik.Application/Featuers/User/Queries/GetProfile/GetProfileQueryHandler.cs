@@ -5,10 +5,13 @@ using Sharik.Application.Featuers.User.Dtos;
 using Sharik.Application.Featuers.UserSkills.Dtos;
 using Sharik.Application.Featuers.UserSkills.Mapper;
 using Sharik.Domain.Common.Results;
+using Sharik.Domain.Notifications;
+using Sharik.Domain.Notifications.Enums;
+using static Sharik.Application.Common.Caching.CacheKeys;
 
 namespace Sharik.Application.Featuers.User.Queries.GetProfile
 {
-    public sealed class GetProfileQueryHandler(IAppDbContext _context) : IRequestHandler<GetProfileQuery , Result<CompleteUserProfileDto>>
+    public sealed class GetProfileQueryHandler(IAppDbContext _context,INotificationApplicationService _notificationService) : IRequestHandler<GetProfileQuery , Result<CompleteUserProfileDto>>
     {
         public async Task<Result<CompleteUserProfileDto>> Handle(GetProfileQuery request , CancellationToken ct)
         {
@@ -23,12 +26,21 @@ namespace Sharik.Application.Featuers.User.Queries.GetProfile
                         u.Rating ,
                         u.UserSkills
                         .Select(us => new UserSkillsDto(
+                            us.Skill.Id ,
                             us.Skill.Name ,
                             us.SkillLevel ,
-                            us.PointPerHour
+                            us.PointPerHour,
+                            us.StudentsCount
                         )).ToList()
                         )).FirstOrDefaultAsync(ct);
 
+
+            Console.WriteLine("testtt");
+
+            await _notificationService.CreateAndSendNotificationAsync(request.UserId ,
+                                                          NotificationType.ProfileCompleted ,
+                                                          NotificationMessage.ProfileCompleted() ,
+                                                          ct);
 
 
             return data;

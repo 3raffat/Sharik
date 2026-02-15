@@ -7,6 +7,7 @@ using Sharik.Application.Common.Responses;
 using Sharik.Application.Featuers.User.Commands.CompleteProfile;
 using Sharik.Application.Featuers.User.Commands.UpdateProfile;
 using Sharik.Application.Featuers.User.Dtos;
+using Sharik.Application.Featuers.User.Queries.GetNotification;
 using Sharik.Application.Featuers.User.Queries.GetProfile;
 using Sharik.Domain.Common.Results;
 
@@ -38,8 +39,24 @@ namespace Sharik.Api.Endpoints
                 .WithSummary("Get user profile by ID")
                 .WithDescription("Retrieves a user's profile information by their unique identifier");
 
+            endpoints.MapGet("notification" , GetUserNotification)
+                .WithSummary("Get user notifications")
+                .WithDescription("Retrieves all notifications for the authenticated user.");
+
+
         }
 
+        private static async Task<IResult> GetUserNotification(ISender sender ,
+                                                               IUser _user ,
+                                                               CancellationToken ct)
+        {
+            var result = await sender.Send(new GetNotificationQuery(_user.UserId) , ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<NotificationDto>>(Data: value ,
+               Status: StatusCodes.Status200OK ,
+               Message: "Notification retrieved successfully")) ,
+               errors => errors.ToProblem());
+        }
 
         private static async Task<IResult> GetUserProfile(ISender sender ,
                                                           [FromRoute] Guid userId ,

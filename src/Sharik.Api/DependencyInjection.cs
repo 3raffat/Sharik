@@ -1,9 +1,7 @@
 ﻿using Asp.Versioning;
-using Microsoft.Extensions.Options;
 using Sharik.Api.OpenApi;
 using Sharik.Api.Services;
 using Sharik.Application.Common.Interfaces;
-using Sharik.Infrastructure.Services;
 using System.Text.Json.Serialization;
 
 namespace Sharik.Api
@@ -13,20 +11,27 @@ namespace Sharik.Api
 
         public static IServiceCollection AddPresentation(this IServiceCollection services)
         {
-            services.AddScoped<IUser,CurrentUser>();
+            services.AddScoped<IUser , CurrentUser>();
             services.AddHttpContextAccessor();
-            services.AddSignalR();
+
+            services.AddSignalR()
+                           .AddJsonProtocol(options =>
+                           {
+                               options.PayloadSerializerOptions.Converters.Add(
+                                   new JsonStringEnumConverter());
+                           });
+
             services.AddCustomApiVersioning()
-                .AddApiDocumentation()
-                .AddJsonConfiguration();
-                return services;
+                    .AddApiDocumentation()
+                    .AddJsonConfiguration();
+            return services;
         }
         public static IServiceCollection AddCustomApiVersioning(this IServiceCollection services)
         {
             services.AddApiVersioning(options =>
             {
                 options.AssumeDefaultVersionWhenUnspecified = true;
-                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.DefaultApiVersion = new ApiVersion(1 , 0);
                 options.ReportApiVersions = true;
                 options.ApiVersionReader = new UrlSegmentApiVersionReader();
             }).AddApiExplorer(options =>
@@ -42,7 +47,7 @@ namespace Sharik.Api
             string[] versions = ["v1"];
             foreach (var version in versions)
             {
-                services.AddOpenApi(version, options =>
+                services.AddOpenApi(version , options =>
                 {
                     // Versioning config
                     options.AddDocumentTransformer<VersionInfoTransformer>();
@@ -60,7 +65,7 @@ namespace Sharik.Api
             services.ConfigureHttpJsonOptions(options =>
             {
                 options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); 
+                options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
 

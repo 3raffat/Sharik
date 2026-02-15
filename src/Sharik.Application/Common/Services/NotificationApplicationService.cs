@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
+using Sharik.Application.Common.Caching;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Domain.Common.Results;
 using Sharik.Domain.Notifications;
@@ -6,7 +8,10 @@ using Sharik.Domain.Notifications.Enums;
 
 namespace Sharik.Application.Common.Services
 {
-    public class NotificationApplicationService(ILogger<NotificationApplicationService> _logger , IAppDbContext _context , INotificationService _notificationService) : INotificationApplicationService
+    public class NotificationApplicationService(ILogger<NotificationApplicationService> _logger ,
+                                                IAppDbContext _context ,
+                                                INotificationService _notificationService ,
+                                                HybridCache _cache) : INotificationApplicationService
     {
         public async Task<Result<Notification>> CreateAndSendNotificationAsync(Guid userId , NotificationType type , string message , CancellationToken ct)
         {
@@ -28,6 +33,8 @@ namespace Sharik.Application.Common.Services
                                    userId);
 
             await _notificationService.SendToUserAsync(notification);
+
+            await _cache.RemoveAsync(CacheKeys.Notification.NotficationByUserId(userId) , ct);
 
             return notification;
         }

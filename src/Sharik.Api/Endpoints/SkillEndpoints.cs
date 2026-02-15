@@ -52,7 +52,7 @@ namespace Sharik.Api.Endpoints
 
             var result = await sender.Send(new GetSkillsQuery() , ct);
 
-            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<SkillDto>>(Data: value ,
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<SkillsDto>>(Data: value ,
                 Status: StatusCodes.Status200OK ,
                 Message: "Skills retrieved successfully")) ,
                 errors => errors.ToProblem());

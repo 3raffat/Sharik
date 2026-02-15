@@ -44,7 +44,7 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.CreateSkill
 
 
             await _cache.RemoveAsync(CacheKeys.Skill.AllSkills , ct);
-
+            
             return skill.ToDto();
         }
     }

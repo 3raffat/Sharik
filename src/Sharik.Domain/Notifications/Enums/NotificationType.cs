@@ -13,6 +13,6 @@
         PointsEarned,
         PointsDeducted,
         ProfileCompleted,
+        WelcomePoints,
     }
-
 }
