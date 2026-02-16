@@ -8,6 +8,7 @@ using Sharik.Application.Featuers.Auth.Commands.ConfirmEmail;
 using Sharik.Application.Featuers.Auth.Commands.UserLogin;
 using Sharik.Application.Featuers.Auth.Commands.UserRegister;
 using Sharik.Application.Featuers.Auth.Dtos;
+using Sharik.Application.Featuers.Auth.Queries.RefreshTokens;
 using Sharik.Domain.Common.Results;
 
 namespace Sharik.Api.Endpoints
@@ -34,9 +35,22 @@ namespace Sharik.Api.Endpoints
                 .WithSummary("Confirm email")
                 .WithDescription("Confirms a user's email address using a token");
 
+            group.MapPost("/refresh-token" , RefreshToken)
+                .WithSummary("Refresh access token")
+                .WithDescription("Use this endpoint to refresh your expired access token using a valid refresh token");
         }
 
-        private static async Task<IResult> ConfirmEmail(ISender _sender,string userId , string token)
+        private static async Task<IResult> RefreshToken(ISender _sender , [FromBody] RefreshTokenQuery query , CancellationToken ct)
+        {
+            var result = await _sender.Send(query , ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<TokenResponse>(Data: value ,
+                           Status: StatusCodes.Status200OK ,
+                           Message: "Refresh token generated successfully")) ,
+                           errors => errors.ToProblem());
+        }
+
+        private static async Task<IResult> ConfirmEmail(ISender _sender , string userId , string token)
         {
 
             var result = await _sender.Send(new ConfirmEmailCommand(userId , token));

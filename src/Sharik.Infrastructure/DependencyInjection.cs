@@ -21,10 +21,23 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services , IConfiguration configuration)
     {
         services.AddSingleton(TimeProvider.System);
+
         services.AddDatabaseContext(configuration)
                 .AddAuthenticationService(configuration)
                 .AddAuthorizationService()
-                .addCaching(configuration);
+                .AddCacheConfiguration(configuration);
+
+
+        services.AddScoped<ITokenProvider , TokenProvider>();
+
+        services.AddScoped<IUserService , UserService>();
+
+        services.AddScoped<IEmailService , EmailService>();
+
+        services.AddScoped<ApplicationDbContextInitialiser>();
+
+        services.AddHostedService<CleanupUnVerifiedUsers>();
+
         return services;
     }
 
@@ -53,17 +66,6 @@ public static class DependencyInjection
             };
         });
 
-        services.AddScoped<ITokenProvider , TokenProvider>();
-
-        services.AddScoped<IUserService , UserService>();
-
-        services.AddScoped<IEmailService , EmailService>();
-
-        services.AddScoped<ApplicationDbContextInitialiser>();
-
-        services.AddHostedService<CleanupUnVerifiedUsers>();
-
-
         return services;
     }
 
@@ -73,7 +75,6 @@ public static class DependencyInjection
 
         return services;
     }
-
 
     public static IServiceCollection AddDatabaseContext(this IServiceCollection services , IConfiguration configuration)
     {
@@ -91,6 +92,18 @@ public static class DependencyInjection
         {
             option.SignIn.RequireConfirmedEmail = true;
 
+            option.Password.RequiredLength = 8;
+
+            option.Password.RequireUppercase = true;
+
+            option.Password.RequireLowercase = true;
+
+            option.Password.RequireDigit = true;
+
+            option.Password.RequireNonAlphanumeric = true;
+
+            option.Password.RequiredUniqueChars = 1;
+
         })
         .AddDefaultTokenProviders()
         .AddRoles<AppRole>()
@@ -101,7 +114,7 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IServiceCollection addCaching(this IServiceCollection services , IConfiguration configuration)
+    public static IServiceCollection AddCacheConfiguration(this IServiceCollection services , IConfiguration configuration)
     {
 
 
@@ -118,7 +131,7 @@ public static class DependencyInjection
 
             option.DefaultEntryOptions = new HybridCacheEntryOptions
             {
-                Expiration = TimeSpan.FromMinutes(1) ,
+                Expiration = TimeSpan.FromMinutes(10) ,
                 LocalCacheExpiration = TimeSpan.FromSeconds(10)
             };
         });

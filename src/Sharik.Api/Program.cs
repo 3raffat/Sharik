@@ -13,16 +13,7 @@ builder.Configuration.AddJsonFile("appsettings.Local.json" , optional: true , re
 builder.Services.AddPresentation()
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy" , policy =>
-    {
-        policy.WithOrigins("http://localhost:5173" , "https://localhost:5173" , "http://localhost:5177" , "https://localhost:5177")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
-    });
-});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -46,12 +37,10 @@ using (var scope = app.Services.CreateScope())
     var httpContextAccessor = scope.ServiceProvider
         .GetRequiredService<IHttpContextAccessor>();
 }
-app.UseCors("CorsPolicy");
+
+app.UseCors();
 
 app.UseCoreMiddlewares();
-
-
-
 
 app.MapAllEndpoints();
 

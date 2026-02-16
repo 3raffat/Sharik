@@ -11,19 +11,14 @@ namespace Sharik.Api
 
         public static IServiceCollection AddPresentation(this IServiceCollection services)
         {
-            services.AddScoped<IUser , CurrentUser>();
-            services.AddHttpContextAccessor();
-
-            services.AddSignalR()
-                           .AddJsonProtocol(options =>
-                           {
-                               options.PayloadSerializerOptions.Converters.Add(
-                                   new JsonStringEnumConverter());
-                           });
 
             services.AddCustomApiVersioning()
                     .AddApiDocumentation()
-                    .AddJsonConfiguration();
+                    .AddJsonConfiguration()
+                    .AddSignalRConfiguration()
+                    .AddCurrentUser()
+                    .AddCors();
+
             return services;
         }
         public static IServiceCollection AddCustomApiVersioning(this IServiceCollection services)
@@ -70,6 +65,41 @@ namespace Sharik.Api
 
 
             services.AddScoped<INotificationService , NotificationService>();
+
+            return services;
+        }
+        public static IServiceCollection AddCors(this IServiceCollection services)
+        {
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.WithOrigins("http://localhost:****")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithExposedHeaders();
+                });
+            });
+            return services;
+        }
+        public static IServiceCollection AddSignalRConfiguration(this IServiceCollection services)
+        {
+
+            services.AddSignalR()
+                          .AddJsonProtocol(options =>
+                          {
+                              options.PayloadSerializerOptions.Converters.Add(
+                                  new JsonStringEnumConverter());
+                          });
+
+            return services;
+        }
+        public static IServiceCollection AddCurrentUser(this IServiceCollection services)
+        {
+
+            services.AddScoped<IUser , CurrentUser>();
+            services.AddHttpContextAccessor();
 
             return services;
         }

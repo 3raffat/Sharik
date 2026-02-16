@@ -15,7 +15,7 @@ namespace Sharik.Infrastructure.Auth
     {
         public async Task<Result<Success>> ConfirmEmailAsync(string userId , string token , CancellationToken ct)
         {
-            var user = await GetUserByIdAsync(userId);
+            var user = await GetUserByIdsAsync(userId);
 
             if (user is null)
             {
@@ -26,7 +26,7 @@ namespace Sharik.Infrastructure.Auth
             if (user.EmailConfirmed)
             {
                 _logger.LogInformation("Email confirmation attempt: Email for user with ID {UserId} is already confirmed." , userId);
-                return AuthErrors.EmailAlreadyConfirmed;    
+                return AuthErrors.EmailAlreadyConfirmed;
             }
 
             var decodedToken = DecodedToken(token);
@@ -151,7 +151,18 @@ namespace Sharik.Infrastructure.Auth
 
         }
 
-        private async Task<AppUser?> GetUserByIdAsync(string userId)
+        public async Task<Result<AppUserDto>> GetUserByIdAsync(string userId)
+        {
+            var user = await _manager.FindByIdAsync(userId) ?? throw new InvalidOperationException(nameof(userId));
+
+            var roles = await _manager.GetRolesAsync(user);
+
+            var claims = await _manager.GetClaimsAsync(user);
+
+            return new AppUserDto(user.Id.ToString() , user.Email! , roles , claims);
+        }
+
+        private async Task<AppUser> GetUserByIdsAsync(string userId)
         {
             return await _manager.FindByIdAsync(userId);
         }
