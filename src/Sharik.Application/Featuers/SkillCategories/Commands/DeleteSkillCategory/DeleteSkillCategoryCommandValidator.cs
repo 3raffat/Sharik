@@ -9,10 +9,8 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.DeleteSkillCatego
         {
             RuleFor(x => x.Id)
                   .NotEmpty()
-                      .WithErrorCode(SkillCategoryErrors.SkillCategoryIdRequired.Code)
                       .WithMessage(SkillCategoryErrors.SkillCategoryIdRequired.Description)
                   .NotEqual(Guid.Empty)
-                      .WithErrorCode(SkillCategoryErrors.SkillCategoryIdRequired.Code)
                       .WithMessage(SkillCategoryErrors.SkillCategoryIdRequired.Description);
         }
     }

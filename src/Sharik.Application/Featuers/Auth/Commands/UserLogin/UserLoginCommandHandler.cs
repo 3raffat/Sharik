@@ -8,7 +8,7 @@ using Sharik.Domain.Notifications.Enums;
 
 namespace Sharik.Application.Featuers.Auth.Commands.UserLogin
 {
-    public sealed class UserLoginCommandHandler(ILogger<UserLoginCommandHandler> _logger , IUserService _userService,INotificationApplicationService _notificationService) : IRequestHandler<UserLoginCommand , Result<LoginUserDto>>
+    public sealed class UserLoginCommandHandler(ILogger<UserLoginCommandHandler> _logger , IUserService _userService) : IRequestHandler<UserLoginCommand , Result<LoginUserDto>>
     {
         public async Task<Result<LoginUserDto>> Handle(UserLoginCommand request , CancellationToken ct)
         {

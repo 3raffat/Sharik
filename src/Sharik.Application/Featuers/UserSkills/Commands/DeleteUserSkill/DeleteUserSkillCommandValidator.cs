@@ -12,12 +12,10 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.DeleteUserSkill
         {
             RuleFor(us => us.UserId)
               .NotEmpty()
-              .WithErrorCode(UserSkillErrors.UserIdRequired.Code)
               .WithMessage(UserSkillErrors.UserIdRequired.Description);
 
             RuleFor(us => us.SkillId)
                 .NotEmpty()
-                 .WithErrorCode(UserSkillErrors.SkillIdRequired.Code)
                  .WithMessage(UserSkillErrors.SkillIdRequired.Description);
         }
     }

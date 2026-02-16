@@ -25,5 +25,10 @@ namespace Sharik.Domain.Messages
                code: "Message.ExchangeId.Required" ,
                description: "Exchange ID connot be empty."
            );
+
+        public static Error ContentTooLong => Error.Validation(
+               code: "Chat.Content.MaxLength" ,
+               description: "Message content cannot exceed 1000 characters."
+           );
     }
 }

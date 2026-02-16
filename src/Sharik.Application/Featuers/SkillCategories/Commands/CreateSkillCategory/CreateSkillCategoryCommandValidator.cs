@@ -12,13 +12,10 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.CreateSkillCatego
         {
             RuleFor(sc=>sc.Name)
                 .NotEmpty()
-                   .WithErrorCode(SkillCategoryErrors.SkillCategoryNameRequired.Code)
                    .WithMessage(SkillCategoryErrors.SkillCategoryNameRequired.Description)
                 .MaximumLength(20)
-                    .WithErrorCode(SkillCategoryErrors.SkillCategoryNameTooLong.Code)
                     .WithMessage(SkillCategoryErrors.SkillCategoryNameTooLong.Description)
                  .MinimumLength(3)
-                    .WithErrorCode(SkillCategoryErrors.SkillCategoryNameTooShort.Code)
                     .WithMessage(SkillCategoryErrors.SkillCategoryNameTooShort.Description);
 
         }

@@ -19,6 +19,31 @@ namespace Sharik.Domain.Exchanges
             description: "Skill offered ID cannot be empty."
         );
 
+        public static Error ExchangeIdRequired => Error.Validation(
+          code: "Exchange.ExchangeId.Required" ,
+          description: "Exchange ID cannot be empty."
+        );
+
+        public static Error TypeRequired => Error.Validation(
+          code: "Exchange.Type.Required" ,
+          description: "Exchange type must be specified."
+        );
+
+        public static Error DurationInvalid => Error.Validation(
+          code: "Exchange.Duration.Invalid" ,
+          description: "Duration must be greater than zero if provided."
+        );
+
+        public static Error PointsValueInvalid => Error.Validation(
+            code: "Exchange.PointsValue.Invalid" ,
+            description: "Points value must be greater than zero if provided."
+        );
+
+        public static Error RequesterMessageTooLong => Error.Validation(
+            code: "Exchange.RequesterMessage.MaxLength" ,
+            description: "Requester message cannot exceed 500 characters."
+        );
+
         public static Error SkillRequestedIdRequired => Error.Validation(
             code: "Exchange.SkillRequestedId.Required" ,
             description: "Skill requested ID cannot be empty."
@@ -54,6 +79,11 @@ namespace Sharik.Domain.Exchanges
             description: "Users cannot rate their own exchanges."
         );
 
+        public static Error CancellationReasonTooLong => Error.Validation(
+           code: "Exchange.CancellationReason.MaxLength" ,
+           description: "Cancellation reason cannot exceed 500 characters."
+        );
+
         public static Error ExchangeNotFound => Error.NotFound(
             code: "Exchange.NotFound" ,
             description: "The specified exchange was not found."
@@ -62,11 +92,6 @@ namespace Sharik.Domain.Exchanges
         public static Error PointsValueRequiredForPointsExchange => Error.Validation(
             code: "Exchange.PointsValue.RequiredForPointsExchange" ,
             description: "Points value is required for points exchanges."
-        );
-
-        public static Error RequesterMessageTooLong => Error.Validation(
-            code: "Exchange.RequesterMessage.TooLong" ,
-            description: "The requester message exceeds the maximum allowed length."
         );
 
         public static Error ExchangeAlreadyCompleted => Error.Conflict(
@@ -120,6 +145,7 @@ namespace Sharik.Domain.Exchanges
         public static Error ChatOnlyInAcceptedExchanges => Error.Conflict(
            code: "Exchange.Chat.OnlyAccepted" ,
            description: "Chat is only available for accepted exchanges.");
+
 
     }
 }
