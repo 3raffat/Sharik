@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy" , policy =>
     {
-        policy.WithOrigins("http://localhost:5173" , "https://localhost:5173" , "http://localhost:5174" , "https://localhost:5174")
+        policy.WithOrigins("http://localhost:5173" , "https://localhost:5173" , "http://localhost:5177" , "https://localhost:5177")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -56,5 +56,7 @@ app.UseCoreMiddlewares();
 app.MapAllEndpoints();
 
 app.MapHub<NotificationHub>("/notificationHub");
+app.MapHub<ChatHub>("/chatHub");
+
 app.Run();
 

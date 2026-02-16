@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Sharik.Application.Common.Interfaces;
 using System.Security.Claims;
 
 namespace Sharik.Api.Hubs
@@ -11,7 +10,7 @@ namespace Sharik.Api.Hubs
 
         public async override Task OnConnectedAsync()
         {
-            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = GetUserId();
 
             if (!string.IsNullOrWhiteSpace(userId))
             {
@@ -25,7 +24,7 @@ namespace Sharik.Api.Hubs
 
         public async override Task OnDisconnectedAsync(Exception? exception)
         {
-            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = GetUserId();
 
             if (!string.IsNullOrWhiteSpace(userId))
             {
@@ -36,6 +35,11 @@ namespace Sharik.Api.Hubs
             }
 
             await base.OnDisconnectedAsync(exception);
+        }
+
+        private string? GetUserId()
+        {
+            return Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
     }
 }

@@ -49,5 +49,10 @@
             public const string SystemNotification = "SystemNotfication:All";
             public static string NotficationByUserId(Guid id) => $"Notification:{id}";
         }
+
+        public static class Message
+        {
+            public static string MessagesByExchangeId(Guid id) => $"MessageExchange:{id}";
+        }
     }
 }

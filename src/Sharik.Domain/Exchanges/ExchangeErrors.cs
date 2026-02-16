@@ -117,5 +117,9 @@ namespace Sharik.Domain.Exchanges
             code: "Exchange.Rating.AlreadyRated" ,
             description: "You have already rated this exchange.");
 
+        public static Error ChatOnlyInAcceptedExchanges => Error.Conflict(
+           code: "Exchange.Chat.OnlyAccepted" ,
+           description: "Chat is only available for accepted exchanges.");
+
     }
 }

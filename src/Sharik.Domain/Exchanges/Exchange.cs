@@ -167,6 +167,23 @@ namespace Sharik.Domain.Exchanges
 
         }
 
+        public Result<Message> AddMessage(Guid senderId , string content)
+        {
+            if (ExchangeStatus != ExchangeStatus.Accepted)
+                return ExchangeErrors.ChatOnlyInAcceptedExchanges;
+
+            if (senderId != RequesterId && senderId != ProviderId)
+                return ExchangeErrors.Unauthorized;
+
+            var msgResult = Message.Create(Id , senderId , content);
+            if (msgResult.IsFailure)
+                return msgResult.Errors;
+
+            _message.Add(msgResult.Value);
+            return msgResult.Value;
+        }
+
+
         private static Result<Success> Validate(Guid requesterId ,
                                               Guid providerId ,
                                               Guid skillOfferedId ,
