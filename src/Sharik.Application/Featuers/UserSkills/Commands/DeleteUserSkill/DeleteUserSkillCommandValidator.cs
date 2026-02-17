@@ -10,11 +10,11 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.DeleteUserSkill
     {
         public DeleteUserSkillCommandValidator()
         {
-            RuleFor(us => us.UserId)
+            RuleFor(us => us.UserId).Cascade(CascadeMode.Stop)
               .NotEmpty()
               .WithMessage(UserSkillErrors.UserIdRequired.Description);
 
-            RuleFor(us => us.SkillId)
+            RuleFor(us => us.SkillId).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                  .WithMessage(UserSkillErrors.SkillIdRequired.Description);
         }

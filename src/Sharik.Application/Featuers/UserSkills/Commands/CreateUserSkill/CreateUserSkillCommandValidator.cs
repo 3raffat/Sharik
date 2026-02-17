@@ -10,19 +10,19 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.CreateUserSkill
     {
         public CreateUserSkillCommandValidator()
         {
-            RuleFor(us => us.userId)
+            RuleFor(us => us.userId).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(UserSkillErrors.UserIdRequired.Description);
 
-            RuleFor(us => us.skillId)
+            RuleFor(us => us.skillId).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                  .WithMessage(UserSkillErrors.SkillIdRequired.Description);
 
-            RuleFor(us => us.skillLevel)
-                .NotEmpty()
+            RuleFor(us => us.skillLevel).Cascade(CascadeMode.Stop)
+                .NotEmpty() 
                  .WithMessage(UserSkillErrors.SkillLevelRequired.Description);
 
-            RuleFor(us=>us.pointPerHour)
+            RuleFor(us => us.pointPerHour).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                  .WithMessage(UserSkillErrors.PointPerHourRequired.Description);
 

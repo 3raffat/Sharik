@@ -5,7 +5,7 @@ using Sharik.Domain.Common.Results;
 
 namespace Sharik.Application.Featuers.SkillCategories.Queries.GetSkillsQuery
 {
-    public sealed record GetSkillsQuery() : ICachedQuery<Result<List<SkillsDto>>>
+    public sealed record GetSkillsQuery() : ICachedQuery<Result<List<SkillWithUsersDto>>>
     {
         public string CacheKey => CacheKeys.Skill.AllSkills;
 

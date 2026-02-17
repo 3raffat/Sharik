@@ -42,7 +42,7 @@ namespace Sharik.Api.Endpoints
             endpoints.MapGet("/skills", GetSkills)
                 .WithSummary("Get all skills")
                 .WithDescription("Retrieves a list of all available skills (public endpoint)")
-                .WithTags("Public:Skill")
+                .WithTags("Public-Explor:Skill")
                 .AllowAnonymous();
 
         }
@@ -52,7 +52,7 @@ namespace Sharik.Api.Endpoints
 
             var result = await sender.Send(new GetSkillsQuery() , ct);
 
-            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<SkillsDto>>(Data: value ,
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<SkillWithUsersDto>>(Data: value ,
                 Status: StatusCodes.Status200OK ,
                 Message: "Skills retrieved successfully")) ,
                 errors => errors.ToProblem());

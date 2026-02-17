@@ -13,11 +13,11 @@ namespace Sharik.Domain.Exchanges
         public Guid RequesterId { get; private set; } // id user need to learn
         public Guid ProviderId { get; private set; } // id learnar user
 
-        public Guid SkillOfferedId { get; private set; }
+        public Guid SkillOfferedId { get; private set; }  // for requester
 
-        public Guid SkillRequestedId { get; private set; }
+        public Guid SkillRequestedId { get; private set; } // for provider
 
-        public ExchangeType Type { get; private set; }
+        public ExchangeType Type { get; private set; } 
 
         public int? Duration { get; private set; }
 
@@ -133,7 +133,19 @@ namespace Sharik.Domain.Exchanges
 
             return Result.Updated;
         }
+        public Result<Updated> RejectExchange(Guid providerId)
+        {
 
+            if (ExchangeStatus != ExchangeStatus.Pending)
+                return ExchangeErrors.CanOnlyRejectPendingExchanges;
+
+            if (ProviderId != providerId)
+                return ExchangeErrors.Unauthorized;
+
+            ExchangeStatus = ExchangeStatus.Rejected;
+
+            return Result.Updated;
+        }
         public Result<Updated> CompleteExchange()
         {
             if (ExchangeStatus != ExchangeStatus.Accepted)

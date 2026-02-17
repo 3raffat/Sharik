@@ -8,6 +8,7 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.DeleteSkillCatego
         public DeleteSkillCategoryCommandValidator()
         {
             RuleFor(x => x.Id)
+                  .Cascade(CascadeMode.Stop)
                   .NotEmpty()
                       .WithMessage(SkillCategoryErrors.SkillCategoryIdRequired.Description)
                   .NotEqual(Guid.Empty)

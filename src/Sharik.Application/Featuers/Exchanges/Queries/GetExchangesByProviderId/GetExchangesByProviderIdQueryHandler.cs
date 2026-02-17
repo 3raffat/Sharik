@@ -15,6 +15,7 @@ namespace Sharik.Application.Featuers.Exchanges.Queries.GetExchangesByProviderId
             var data = await _context.Exchanges.Where(us => us.ProviderId == request.providerId)
                 .Select(e =>
                 new ProviderExchangeDto(
+                            e.Id,
                             e.Requester.fullName ,
                             e.SkillOffered.Name ,
                             e.SkillRequested.Name ,

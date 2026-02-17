@@ -7,7 +7,7 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.UpdateSkillCatego
     {
         public UpdateSkillCategoryCommandValidator()
         {
-            RuleFor(sc => sc.Name)
+            RuleFor(sc => sc.Name).Cascade(CascadeMode.Stop)
                .NotEmpty()
                   .WithMessage(SkillCategoryErrors.SkillCategoryNameRequired.Description)
                .MaximumLength(20)
@@ -15,7 +15,7 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.UpdateSkillCatego
                 .MinimumLength(3)
                    .WithMessage(SkillCategoryErrors.SkillCategoryNameTooShort.Description);
 
-            RuleFor(x => x.Id)
+            RuleFor(x => x.Id).Cascade(CascadeMode.Stop)
                   .NotEmpty()
                       .WithMessage(SkillCategoryErrors.SkillCategoryIdRequired.Description)
                   .NotEqual(Guid.Empty)

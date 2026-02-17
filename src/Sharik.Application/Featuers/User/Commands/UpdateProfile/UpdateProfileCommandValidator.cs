@@ -12,18 +12,19 @@ namespace Sharik.Application.Featuers.User.Commands.UpdateProfile
         {
 
             RuleFor(x => x.userId)
+             .Cascade(CascadeMode.Stop)
              .NotEmpty()
              .WithMessage(AppUserErrors.UserIdRequired.Description);
 
-            RuleFor(x => x.FirstName)
+            RuleFor(x => x.FirstName).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(AppUserErrors.FirstNameRequired.Description);
 
-            RuleFor(x => x.LastName)
+            RuleFor(x => x.LastName).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(AppUserErrors.LastNameRequired.Description);
 
-            RuleFor(x => x.Bio)
+            RuleFor(x => x.Bio).Cascade(CascadeMode.Stop)
                 .MaximumLength(1000)
                 .WithMessage(AppUserErrors.BioTooLong.Description);
 

@@ -10,6 +10,7 @@ using Sharik.Application.Featuers.Exchanges.CompleteExchanges;
 using Sharik.Application.Featuers.Exchanges.CreateExchanges;
 using Sharik.Application.Featuers.Exchanges.Dtos;
 using Sharik.Application.Featuers.Exchanges.Queries.GetExchangesByProviderId;
+using Sharik.Application.Featuers.Exchanges.RejectExchanges;
 using Sharik.Domain.Common.Results;
 
 namespace Sharik.Api.Endpoints
@@ -29,22 +30,38 @@ namespace Sharik.Api.Endpoints
                  .WithSummary("Create a new exchange")
                  .WithDescription("Creates a new exchange between users");
 
-            group.MapPut("{exchangeId:guid}/Accept" , AcceptExchange)
+            group.MapPut("{exchangeId:guid}/accept" , AcceptExchange)
                 .WithSummary("Accept an exchange")
                 .WithDescription("Accepts a pending exchange by its ID");
 
-            group.MapPut("{exchangeId:guid}/Cancel" , CancelleExchange)
+            group.MapPut("{exchangeId:guid}/cancel" , CancelleExchange)
                  .WithSummary("Cancel an exchange")
                  .WithDescription("Cancels an existing exchange by its ID");
 
-            group.MapPut("{exchangeId:guid}/Complete" , CompleteExchange)
+            group.MapPut("{exchangeId:guid}/complete" , CompleteExchange)
                 .WithName("CompleteExchange")
                 .WithSummary("Complete an exchange")
                 .WithDescription("Marks an exchange as completed by its ID");
 
+            group.MapPut("{exchangeId:guid}/reject" , RejectExchange)
+                .WithName("RejectExchange")
+                .WithSummary("Reject an exchange")
+                .WithDescription("Marks an exchange as rejected by its ID.");
+
+
             group.MapGet("" , GetExchanges)
                 .WithSummary("Get all exchanges")
                 .WithDescription("Retrieves a list of all exchanges for the authenticated user");
+        }
+
+        private static async Task<IResult> RejectExchange(ISender sender , IUser user , [FromRoute] Guid exchangeId , CancellationToken ct)
+        {
+            var result = await sender.Send(new RejectExchangeCommand(user.UserId , exchangeId) , ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<Updated>(Data: value ,
+                Status: StatusCodes.Status200OK ,
+                Message: "Exchange Rejected successfully")) ,
+                errors => errors.ToProblem());
         }
 
         private static async Task<IResult> GetExchanges(ISender sender , IUser user , CancellationToken ct)

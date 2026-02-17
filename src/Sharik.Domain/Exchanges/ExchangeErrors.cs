@@ -103,6 +103,9 @@ namespace Sharik.Domain.Exchanges
             code: "Exchange.CanOnlyApprovePending" ,
             description: "Only exchanges with a pending status can be approved.");
 
+        public static Error CanOnlyRejectPendingExchanges => Error.Conflict(
+            code: "Exchange.CanOnlyRejectPending" ,
+            description: "Only exchanges with a pending status can be reject.");
 
         public static Error ExchangeAlreadyCancelled => Error.Conflict(
             code: "Exchange.AlreadyCancelled" ,

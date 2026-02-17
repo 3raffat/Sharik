@@ -8,7 +8,7 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.CreateSkill
     {
         public CreateSkillCommandValidator()
         {
-            RuleFor(x => x.Name)
+            RuleFor(x => x.Name).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                     .WithMessage(SkillErrors.SkillNameRequired.Description)
                 .MaximumLength(100)
@@ -17,7 +17,7 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.CreateSkill
                    .WithMessage(SkillErrors.SkillNameTooShort.Description);
 
 
-            RuleFor(x => x.CategoryId)
+            RuleFor(x => x.CategoryId).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                     .WithMessage(SkillCategoryErrors.SkillCategoryIdRequired.Description)
                 .NotEqual(Guid.Empty)

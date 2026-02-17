@@ -9,12 +9,14 @@ namespace Sharik.Application.Featuers.Auth.Commands.UserLogin
         {
 
             RuleFor(x => x.email)
+              .Cascade(CascadeMode.Stop)
               .NotEmpty()
               .WithMessage(AppUserErrors.EmailRequired.Description)
               .EmailAddress()
               .WithMessage(AppUserErrors.EmailInvalid.Description);
 
             RuleFor(x => x.password)
+                 .Cascade(CascadeMode.Stop)
                  .NotEmpty()
                  .WithMessage(AppUserErrors.PasswordRequired.Description)
                  .Matches(@"^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$")

@@ -10,19 +10,19 @@ namespace Sharik.Application.Featuers.User.Commands.CompleteProfile
     {
         public CompleteProfileCommandValidator()
         {
-            RuleFor(x => x.userId)
+            RuleFor(x => x.userId).Cascade(CascadeMode.Stop)
                .NotEmpty()
                .WithMessage(AppUserErrors.UserIdRequired.Description);
 
-            RuleFor(x => x.firstName)
+            RuleFor(x => x.firstName).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(AppUserErrors.FirstNameRequired.Description);
 
-            RuleFor(x => x.lastName)
+            RuleFor(x => x.lastName).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(AppUserErrors.LastNameRequired.Description);
 
-            RuleFor(x => x.bio)
+            RuleFor(x => x.bio).Cascade(CascadeMode.Stop)
                 .MaximumLength(1000)
                 .WithMessage(AppUserErrors.BioTooLong.Description);
         }

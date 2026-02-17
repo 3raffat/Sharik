@@ -10,6 +10,7 @@ namespace Sharik.Application.Featuers.Auth.Commands.UserRegister
         {
 
             RuleFor(x => x.username)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(AppUserErrors.UserNameRequired.Description)
                 .MinimumLength(3)
@@ -18,12 +19,14 @@ namespace Sharik.Application.Featuers.Auth.Commands.UserRegister
                 .WithMessage(AppUserErrors.UserNameTooLong.Description);
 
             RuleFor(x => x.email)
+                .Cascade(CascadeMode.Stop) 
                 .NotEmpty()
                 .WithMessage(AppUserErrors.EmailRequired.Description)
                 .EmailAddress()
                 .WithMessage(AppUserErrors.EmailInvalid.Description);
 
             RuleFor(x => x.password)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(AppUserErrors.PasswordRequired.Description)
                 .Matches(@"^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$")

@@ -10,7 +10,7 @@ namespace Sharik.Application.Featuers.SkillCategories.Commands.CreateSkillCatego
     {
         public CreateSkillCategoryCommandValidator()
         {
-            RuleFor(sc=>sc.Name)
+            RuleFor(sc=>sc.Name).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                    .WithMessage(SkillCategoryErrors.SkillCategoryNameRequired.Description)
                 .MaximumLength(20)

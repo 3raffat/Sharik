@@ -33,16 +33,7 @@ namespace Sharik.Application.Featuers.User.Queries.GetProfile
                             us.StudentsCount
                         )).ToList()
                         )).FirstOrDefaultAsync(ct);
-
-
-            Console.WriteLine("testtt");
-
-            await _notificationService.CreateAndSendNotificationAsync(request.UserId ,
-                                                          NotificationType.ProfileCompleted ,
-                                                          NotificationMessage.ProfileCompleted() ,
-                                                          ct);
-
-
+         
             return data;
         }
     }

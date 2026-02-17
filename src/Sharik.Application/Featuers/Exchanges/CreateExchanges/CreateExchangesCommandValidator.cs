@@ -10,37 +10,37 @@ namespace Sharik.Application.Featuers.Exchanges.CreateExchanges
     {
         public CreateExchangesCommandValidator() 
         {
-            RuleFor(x => x.requesterId)
+            RuleFor(x => x.requesterId).Cascade(CascadeMode.Stop)
                .NotEmpty()
                .WithMessage(ExchangeErrors.RequesterIdRequired.Description);
 
-            RuleFor(x => x.providerId)
+            RuleFor(x => x.providerId).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(ExchangeErrors.ProviderIdRequired.Description);
 
-            RuleFor(x => x.skillOfferedId)
+            RuleFor(x => x.skillOfferedId).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(ExchangeErrors.SkillOfferedIdRequired.Description);
 
-            RuleFor(x => x.skillRequestedId)
+            RuleFor(x => x.skillRequestedId).Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(ExchangeErrors.SkillRequestedIdRequired.Description);
 
-            RuleFor(x => x.type)
+            RuleFor(x => x.type).Cascade(CascadeMode.Stop)
                 .IsInEnum()
                 .WithMessage(ExchangeErrors.TypeRequired.Description);
 
-            RuleFor(x => x.duration)
+            RuleFor(x => x.duration).Cascade(CascadeMode.Stop)
                 .GreaterThan(0)
                 .When(x => x.duration.HasValue)
                 .WithMessage(ExchangeErrors.DurationInvalid.Description);
 
-            RuleFor(x => x.pointsValue)
+            RuleFor(x => x.pointsValue).Cascade(CascadeMode.Stop)
                 .GreaterThan(0)
                 .When(x => x.pointsValue.HasValue)
                 .WithMessage(ExchangeErrors.PointsValueInvalid.Description);
 
-            RuleFor(x => x.requesterMessage)
+            RuleFor(x => x.requesterMessage).Cascade(CascadeMode.Stop)
                 .MaximumLength(500)
                 .WithMessage(ExchangeErrors.RequesterMessageTooLong.Description);
 

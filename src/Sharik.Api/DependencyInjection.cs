@@ -75,7 +75,7 @@ namespace Sharik.Api
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.WithOrigins("http://localhost:****")
+                    policy.WithOrigins("http://localhost:5174")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .WithExposedHeaders();

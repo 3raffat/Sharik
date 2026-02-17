@@ -8,14 +8,17 @@ namespace Sharik.Application.Featuers.Chat.Commands.SendMassage
         public SendMessageCommandValidator()
         {
             RuleFor(x => x.ExchangeId)
+               .Cascade(CascadeMode.Stop)
                .NotEmpty()
                .WithMessage(MessageErrors.ExchangeIdRequired.Description);
 
             RuleFor(x => x.SenderId)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(MessageErrors.SenderIdRequired.Description);
 
             RuleFor(x => x.Content)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(MessageErrors.MassageRequired.Description)
                 .MaximumLength(1000)

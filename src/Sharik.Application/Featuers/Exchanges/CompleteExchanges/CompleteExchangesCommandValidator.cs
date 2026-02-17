@@ -12,10 +12,12 @@ namespace Sharik.Application.Featuers.Exchanges.CompleteExchanges
         public CompleteExchangesCommandValidator()
         {
             RuleFor(x => x.ProviderId)
-            .NotEmpty()
-            .WithMessage(ExchangeErrors.ProviderIdRequired.Description);
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithMessage(ExchangeErrors.ProviderIdRequired.Description);
 
             RuleFor(x => x.ExchangeId)
+                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(ExchangeErrors.ExchangeIdRequired.Description);
         }
