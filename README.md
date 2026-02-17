@@ -65,16 +65,14 @@ The system follows Clean Architecture principles with clear separation of concer
 - Implement real-time communication and background processing  
 - Ensure security and performance  
 ---
+## 🔧 Platform Flow
 
-## ⚙️ Platform Flow
+### 🔑 Authentication Flow
+![Authentication Flow](assets/authentication-flow.png)
 
-#### 🔑 Authentication Flow
-![Image](https://github.com/user-attachments/assets/e2c6d91b-c6bf-49d3-a6db-5f844782fd1f)
+### 👤 User Flow
+![User Flow](assets/user-flow.png)
 
-#### 👤 User Flow
-
-![Image](https://github.com/user-attachments/assets/87c4daf0-de4e-4846-8c9e-98bfc70cb5a7)
-
-#### 👩‍💻 Provider Flow 
-![Image](https://github.com/user-attachments/assets/595aa342-7ab3-4561-bf4b-e88e0f34b3ec)
+### 🧑‍💼 Provider Flow
+![Provider Flow](assets/provider-flow.png)
 
