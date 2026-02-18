@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Sharik.Api.Extensions;
 using Sharik.Api.OpenApi;
 using Sharik.Api.Services;
 using Sharik.Application.Common.Interfaces;
@@ -15,6 +16,8 @@ namespace Sharik.Api
             services.AddCustomApiVersioning()
                     .AddApiDocumentation()
                     .AddJsonConfiguration()
+                    .AddCustomProblemDetails()
+                    .AddExceptionHandling()
                     .AddSignalRConfiguration()
                     .AddCurrentUser()
                     .AddCors();
@@ -75,7 +78,7 @@ namespace Sharik.Api
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.WithOrigins("http://localhost:5174")
+                    policy.WithOrigins("http://localhost:3000")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .WithExposedHeaders();
@@ -101,6 +104,21 @@ namespace Sharik.Api
             services.AddScoped<IUser , CurrentUser>();
             services.AddHttpContextAccessor();
 
+            return services;
+        }
+        public static IServiceCollection AddCustomProblemDetails(this IServiceCollection services)
+        {
+            services.AddProblemDetails(options => options.CustomizeProblemDetails = (context) =>
+            {
+                context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+                context.ProblemDetails.Extensions.Add("requestId" , context.HttpContext.TraceIdentifier);
+            });
+
+            return services;
+        }
+        public static IServiceCollection AddExceptionHandling(this IServiceCollection services)
+        {
+            services.AddExceptionHandler<GlobalExceptionHandler>();
             return services;
         }
     }

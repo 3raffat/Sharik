@@ -2,25 +2,19 @@
 using Microsoft.EntityFrameworkCore;
 using Sharik.Application.Common.Interfaces;
 using Sharik.Application.Featuers.SkillCategories.Dtos;
+using Sharik.Application.Featuers.SkillCategories.Mappers;
 using Sharik.Domain.Common.Results;
-namespace Sharik.Application.Featuers.SkillCategories.Queries.GetSkillsQuery
+
+namespace Sharik.Application.Featuers.SkillCategories.Queries.GetSkills
 {
-    public sealed class GetSkillsQueryHandler(IAppDbContext _context) : IRequestHandler<GetSkillsQuery , Result<List<SkillWithUsersDto>>>
+    public sealed class GetSkillsQueryHandler(IAppDbContext _context) : IRequestHandler<GetSkillsQuery , Result<List<SkillDto>>>
     {
-        public async Task<Result<List<SkillWithUsersDto>>> Handle(GetSkillsQuery request , CancellationToken ct)
+        public async Task<Result<List<SkillDto>>> Handle(GetSkillsQuery request , CancellationToken ct)
         {
-
-            var data = await _context.Skills.
-                Select(s => new SkillWithUsersDto(s.Id , s.Name , s.UserSkills
-               .Select(us => new SkillUserDto(
-                us.UserId ,
-                us.User.fullName ,
-                us.SkillLevel ,
-                us.PointPerHour
-                    )).ToList())).ToListAsync(ct);
+            var data = await _context.Skills.ToListAsync(ct);
 
 
-            return data;
+            return data.ToDtos();
         }
     }
 }

@@ -7,6 +7,7 @@ using Sharik.Application.Featuers.SkillCategories.Commands.CreateSkill;
 using Sharik.Application.Featuers.SkillCategories.Commands.DeleteSkill;
 using Sharik.Application.Featuers.SkillCategories.Commands.UpdateSkill;
 using Sharik.Application.Featuers.SkillCategories.Dtos;
+using Sharik.Application.Featuers.SkillCategories.Queries.GetSkills;
 using Sharik.Application.Featuers.SkillCategories.Queries.GetSkillsQuery;
 using Sharik.Domain.Common.Results;
 using Sharik.Domain.User.Enums;
@@ -39,10 +40,15 @@ namespace Sharik.Api.Endpoints
                  .WithSummary("Update a skill")
                  .WithDescription("Updates an existing skill in a category");
 
-            endpoints.MapGet("/skills", GetSkills)
+            endpoints.MapGet("/skills/explore" , GetSkillsWithProviders)
+                .WithSummary("Explore skills with providers")
+                .WithDescription("Retrieves a list of skills along with their associated providers")
+                .AllowAnonymous();
+
+
+            endpoints.MapGet("/skills" , GetSkills)
                 .WithSummary("Get all skills")
-                .WithDescription("Retrieves a list of all available skills (public endpoint)")
-                .WithTags("Public-Explor:Skill")
+                .WithDescription("Retrieves a list of all available skills")
                 .AllowAnonymous();
 
         }
@@ -52,7 +58,18 @@ namespace Sharik.Api.Endpoints
 
             var result = await sender.Send(new GetSkillsQuery() , ct);
 
-            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<SkillWithUsersDto>>(Data: value ,
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<SkillDto>>(Data: value ,
+                Status: StatusCodes.Status200OK ,
+                Message: "Skills retrieved successfully")) ,
+                errors => errors.ToProblem());
+        }
+
+        private static async Task<IResult> GetSkillsWithProviders(ISender sender , CancellationToken ct)
+        {
+
+            var result = await sender.Send(new GetSkillsWithProvidersQuery() , ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<SkillWithProvidersDto>>(Data: value ,
                 Status: StatusCodes.Status200OK ,
                 Message: "Skills retrieved successfully")) ,
                 errors => errors.ToProblem());

@@ -73,7 +73,7 @@ namespace Sharik.Api.Endpoints
         {
             var result = await sender.Send(new GetExchangesByProviderIdQuery(user.UserId) , ct);
 
-            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<ProviderExchangeDto>>(Data: value ,
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<UserExchangeDto>>(Data: value ,
                 Status: StatusCodes.Status200OK ,
                 Message: "Exchange retrieved successfully")) ,
                 errors => errors.ToProblem());
@@ -93,10 +93,9 @@ namespace Sharik.Api.Endpoints
         private static async Task<IResult> CancelleExchange(ISender sender ,
                                                             IUser user ,
                                                             [FromRoute] Guid exchangeId ,
-                                                            [FromBody] CancelleExchangesRequest request ,
                                                             CancellationToken ct)
         {
-            var result = await sender.Send(new CancelleExchangesCommand(user.UserId , exchangeId , request.cancellationReason) , ct);
+            var result = await sender.Send(new CancelleExchangesCommand(user.UserId , exchangeId) , ct);
 
             return result.Match(value => Results.Ok(new StandardSuccessResponse<Updated>(Data: value ,
                 Status: StatusCodes.Status200OK ,
@@ -149,7 +148,7 @@ namespace Sharik.Api.Endpoints
             var result = await sender.Send(new CreateTeachingExchangesCommand(user.UserId ,
                                                                               request.providerId ,
                                                                               request.skillRequestedId ,
-                                                                              request.duration,
+                                                                              request.duration ,
                                                                               request.requesterMessage) , ct);
 
             return result.Match(value => Results.Ok(new StandardSuccessResponse<Success>(Data: value ,

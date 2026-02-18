@@ -18,24 +18,24 @@ namespace Sharik.Application.Featuers.Exchanges.CancelleExchanges
     {
         public async Task<Result<Updated>> Handle(CancelleExchangesCommand request , CancellationToken ct)
         {
-            var existingExchange = await _context.Exchanges
-                .FirstOrDefaultAsync(e => e.Id == request.ExchangeId && e.ProviderId == request.ProviderId , ct);
+            var existingExchange = await _context.Exchanges.Include(e=>e.Requester)
+                .FirstOrDefaultAsync(e => e.Id == request.ExchangeId && e.RequesterId == request.RequesterId , ct);
 
             if (existingExchange is null)
             {
-                _logger.LogWarning("Exchange with ID {ExchangeId} not found for provider {ProviderId}." , request.ExchangeId , request.ProviderId);
+                _logger.LogWarning("Exchange with ID {ExchangeId} not found for requester {RequesterId}." , request.ExchangeId , request.RequesterId);
                 return ApplicationErrors.ExchangeNotFound;
             }
 
 
-            var cancelResult = existingExchange.CancelExchange(request.cancellationReason);
+            var cancelResult = existingExchange.CancelExchange();
 
             if (cancelResult.IsFailure)
                 return cancelResult.Errors;
 
             await _context.SaveChangesAsync(ct);
 
-            _logger.LogInformation("Exchange with ID {ExchangeId} cancelled successfully for provider {ProviderId}." , request.ExchangeId , request.ProviderId);
+            _logger.LogInformation("Exchange with ID {ExchangeId} cancelled successfully for requester {RequesterId}." , request.ExchangeId , request.RequesterId);
 
             await _notificationService.CreateAndSendNotificationAsync(existingExchange.RequesterId ,
                                                                       NotificationType.ExchangeCanceled ,

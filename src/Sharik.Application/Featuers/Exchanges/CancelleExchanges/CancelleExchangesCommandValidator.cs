@@ -10,20 +10,16 @@ namespace Sharik.Application.Featuers.Exchanges.CancelleExchanges
     {
         public CancelleExchangesCommandValidator()
         {
-            RuleFor(x => x.ProviderId)
+            RuleFor(x => x.RequesterId)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithMessage(ExchangeErrors.ProviderIdRequired.Description);
+                .WithMessage(ExchangeErrors.RequesterIdRequired.Description);
 
             RuleFor(x => x.ExchangeId)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(ExchangeErrors.ExchangeIdRequired.Description);
 
-            RuleFor(x => x.cancellationReason)
-                .Cascade(CascadeMode.Stop)
-                .MaximumLength(500)
-                .WithMessage(ExchangeErrors.CancellationReasonTooLong.Description);
 
         }
     }

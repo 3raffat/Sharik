@@ -19,7 +19,7 @@ namespace Sharik.Application.Featuers.UserSkills.Commands.CreateUserSkill
                  .WithMessage(UserSkillErrors.SkillIdRequired.Description);
 
             RuleFor(us => us.skillLevel).Cascade(CascadeMode.Stop)
-                .NotEmpty() 
+                .IsInEnum()
                  .WithMessage(UserSkillErrors.SkillLevelRequired.Description);
 
             RuleFor(us => us.pointPerHour).Cascade(CascadeMode.Stop)

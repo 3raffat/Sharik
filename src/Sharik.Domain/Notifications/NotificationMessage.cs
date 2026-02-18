@@ -15,7 +15,7 @@
             => $"Exchange #{exchangeId} completed successfully.";
 
         public static string ExchangeCanceled(Guid exchangeId)
-            => $"Exchange #{exchangeId} has been canceled.";
+         => $"Exchange #{exchangeId} has been canceled and 5 points have been deducted.";
 
         public static string NewMessage(string senderName , string messagePreview)
             => $"New message from {senderName}: {messagePreview}";

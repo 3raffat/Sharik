@@ -130,7 +130,7 @@ namespace Sharik.Domain.Exchanges
             return Result.Updated;
         }
 
-        public Result<Updated> CancelExchange(string? cancellationReason)
+        public Result<Updated> CancelExchange()
         {
             if (ExchangeStatus == ExchangeStatus.Cancelled)
                 return ExchangeErrors.ExchangeAlreadyCancelled;
@@ -138,15 +138,16 @@ namespace Sharik.Domain.Exchanges
             if (ExchangeStatus == ExchangeStatus.Completed)
                 return ExchangeErrors.ExchangeAlreadyCompleted;
 
-            if (PointsValue < 15)
-                return ExchangeErrors.InsufficientPoints;
+            if (ExchangeStatus == ExchangeStatus.Accepted)
+                return ExchangeErrors.ExchangeAlreadyAccepted;
 
+            if (PointsValue is int value)
+            {
+                var cuttOff = value - 5;
+                Requester.AddPoints(cuttOff);
+            }
 
-            CancellationReason = cancellationReason;
             ExchangeStatus = ExchangeStatus.Cancelled;
-            PointsValue -= 15;
-
-
             return Result.Updated;
         }
         public Result<Updated> RejectExchange(Guid providerId)
@@ -201,7 +202,7 @@ namespace Sharik.Domain.Exchanges
 
             _ratings.Add(ratingresult.Value);
 
-                return ratingresult.Value;
+            return ratingresult.Value;
 
         }
         public Result<Message> AddMessage(Guid senderId , string content)

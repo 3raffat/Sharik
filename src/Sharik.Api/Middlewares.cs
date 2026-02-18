@@ -4,6 +4,8 @@
     {
         public static IApplicationBuilder UseCoreMiddlewares(this IApplicationBuilder app)
         {
+            app.UseExceptionHandler();
+
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();

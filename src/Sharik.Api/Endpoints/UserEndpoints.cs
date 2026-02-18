@@ -9,6 +9,7 @@ using Sharik.Application.Featuers.User.Commands.UpdateProfile;
 using Sharik.Application.Featuers.User.Dtos;
 using Sharik.Application.Featuers.User.Queries.GetNotification;
 using Sharik.Application.Featuers.User.Queries.GetProfile;
+using Sharik.Application.Featuers.User.Queries.GetRankedUser;
 using Sharik.Domain.Common.Results;
 
 namespace Sharik.Api.Endpoints
@@ -44,7 +45,26 @@ namespace Sharik.Api.Endpoints
                 .WithDescription("Retrieves all notifications for the authenticated user.");
 
 
+            endpoints.MapGet("/rank" , GetRankedUsers)
+                .WithSummary("Get ranked users")
+                .WithDescription("Returns a list of users sorted by points in descending order.")
+                .WithTags("Public-Rank:User")
+                .AllowAnonymous();
+   
+
         }
+
+        private static async Task<IResult> GetRankedUsers(ISender sender ,
+                                                          CancellationToken ct)
+        {
+            var result = await sender.Send(new GetRankedUserQuery() , ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<List<RankedUserDto>>(Data: value ,
+               Status: StatusCodes.Status200OK ,
+               Message: "Ranked users retrieved successfully")) ,
+               errors => errors.ToProblem());
+        }
+
 
         private static async Task<IResult> GetUserNotification(ISender sender ,
                                                                IUser _user ,

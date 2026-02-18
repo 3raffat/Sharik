@@ -80,6 +80,12 @@ namespace Sharik.Domain.Exchanges
             description: "The exchange has already been completed."
         );
 
+        public static Error ExchangeAlreadyAccepted => Error.Conflict(
+         code: "Exchange.AlreadyAccepted" ,
+         description: "The exchange has already been accepted."
+        );
+
+
         public static Error CanOnlyApprovePendingExchanges => Error.Conflict(
             code: "Exchange.CanOnlyApprovePending" ,
             description: "Only exchanges with a pending status can be approved.");

@@ -8,4 +8,6 @@ namespace Sharik.Application.Featuers.User.Dtos
 
     public sealed record RatingDto(string raterName , int score , string? comment);
 
+    public sealed record UserExchange(string name);
+
 }

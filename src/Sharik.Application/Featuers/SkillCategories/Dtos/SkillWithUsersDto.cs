@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Sharik.Application.Featuers.SkillCategories.Dtos
 {
-    public sealed record SkillWithUsersDto(Guid Id ,
+    public sealed record SkillWithProvidersDto(Guid Id ,
                                            string Name ,
-                                           List<SkillUserDto> Users);
+                                           List<SkillUserDto> providers);
 
     public sealed record SkillUserDto(Guid UserId ,
                                       string Name ,
