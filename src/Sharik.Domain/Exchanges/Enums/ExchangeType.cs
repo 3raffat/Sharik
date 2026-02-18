@@ -7,7 +7,7 @@ namespace Sharik.Domain.Exchanges.Enums
 {
     public enum ExchangeType
     {
-        Swap ,     
-        Points 
+        Swap ,
+        Teaching
     }
 }

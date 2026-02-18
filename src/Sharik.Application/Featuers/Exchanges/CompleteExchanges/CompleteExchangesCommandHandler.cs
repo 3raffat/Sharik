@@ -19,6 +19,8 @@ namespace Sharik.Application.Featuers.Exchanges.CompleteExchanges
         public async Task<Result<Updated>> Handle(CompleteExchangesCommand request , CancellationToken ct)
         {
             var existingExchange = await _context.Exchanges
+                .Include(e=>e.Provider)
+                .ThenInclude(e=>e.UserSkills)
                 .FirstOrDefaultAsync(e => e.Id == request.ExchangeId && e.ProviderId == request.ProviderId , ct);
 
             if (existingExchange is null)

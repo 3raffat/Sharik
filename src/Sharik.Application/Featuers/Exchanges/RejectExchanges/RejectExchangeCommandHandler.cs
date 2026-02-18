@@ -23,7 +23,7 @@ namespace Sharik.Application.Featuers.Exchanges.RejectExchanges
     {
         public async Task<Result<Updated>> Handle(RejectExchangeCommand request , CancellationToken ct)
         {
-            var existingExchange = await _context.Exchanges
+            var existingExchange = await _context.Exchanges.Include(e=>e.Requester)
                 .FirstOrDefaultAsync(e => e.Id == request.ExchangeId && e.ProviderId == request.ProviderId , ct);
 
             if (existingExchange is null)

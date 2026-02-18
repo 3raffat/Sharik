@@ -111,5 +111,20 @@ namespace Sharik.Domain.User
             code: "AppUser.Token.Required" ,
             description: "Token cannot be empty."
         );
+
+        public static Error InvalidPoints => Error.Validation(
+          code: "User.Points.Invalid" ,
+          description: "Points must be greater than zero."
+        );
+
+        public static Error InsufficientPoints => Error.Validation(
+          code: "User.Points.Insufficient" ,
+          description: "User does not have enough points."
+        );
+
+        public static Error RatingDoesNotBelongToUser => Error.Validation(
+           code: "Rating.DoesNotBelongToUser" ,
+           description: "The rating does not belong to this user.");
+
     }
 }

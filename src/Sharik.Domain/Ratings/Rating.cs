@@ -22,7 +22,7 @@ namespace Sharik.Domain.Ratings
 
         private Rating() { }
 
-        private Rating(Guid exchangeId , Guid raterId , Guid ratedUserId , int score , string? comment)
+        private Rating(Guid Id,Guid exchangeId , Guid raterId , Guid ratedUserId , int score , string? comment):base(Id)
         {
             ExchangeId = exchangeId;
             RaterId = raterId;
@@ -38,7 +38,7 @@ namespace Sharik.Domain.Ratings
             if (validation.IsFailure)
                 return validation.Errors;
 
-            return new Rating(exchangeId , raterId , ratedUserId , score , comment);
+            return new Rating(Guid.NewGuid(),exchangeId , raterId , ratedUserId , score , comment);
         }
 
         public Result<Updated> Update(int score , string? comment)

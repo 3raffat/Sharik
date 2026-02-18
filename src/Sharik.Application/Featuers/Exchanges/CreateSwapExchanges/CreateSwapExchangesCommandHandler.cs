@@ -13,13 +13,13 @@ using Sharik.Domain.Notifications.Enums;
 
 namespace Sharik.Application.Featuers.Exchanges.CreateExchanges
 {
-    public sealed class CreateExchangesCommandHandler(
-        ILogger<CreateExchangesCommandHandler> _logger ,
+    public sealed class CreateSwapExchangesCommandHandler(
+        ILogger<CreateSwapExchangesCommandHandler> _logger ,
         IAppDbContext _context ,
         INotificationApplicationService _notificationService ,
-        HybridCache _cache) : IRequestHandler<CreateExchangesCommand , Result<Success>>
+        HybridCache _cache) : IRequestHandler<CreateSwapExchangesCommand , Result<Success>>
     {
-        public async Task<Result<Success>> Handle(CreateExchangesCommand request , CancellationToken ct)
+        public async Task<Result<Success>> Handle(CreateSwapExchangesCommand request , CancellationToken ct)
         {
             var validationData = await _context.Users
                 .Where(u => u.Id == request.requesterId || u.Id == request.providerId)
@@ -87,14 +87,11 @@ namespace Sharik.Application.Featuers.Exchanges.CreateExchanges
                 return ApplicationErrors.ExchangeAlreadyExists;
             }
 
-            var exchangeResult = Exchange.Create(
+            var exchangeResult = Exchange.CreateSwap(
                 request.requesterId ,
                 request.providerId ,
                 request.skillOfferedId ,
                 request.skillRequestedId ,
-                request.type ,
-                request.duration ,
-                request.pointsValue ,
                 request.requesterMessage);
 
             if (exchangeResult.IsFailure)

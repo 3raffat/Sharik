@@ -11,7 +11,7 @@ using static Sharik.Application.Common.Caching.CacheKeys;
 
 namespace Sharik.Application.Featuers.User.Queries.GetProfile
 {
-    public sealed class GetProfileQueryHandler(IAppDbContext _context,INotificationApplicationService _notificationService) : IRequestHandler<GetProfileQuery , Result<CompleteUserProfileDto>>
+    public sealed class GetProfileQueryHandler(IAppDbContext _context) : IRequestHandler<GetProfileQuery , Result<CompleteUserProfileDto>>
     {
         public async Task<Result<CompleteUserProfileDto>> Handle(GetProfileQuery request , CancellationToken ct)
         {
@@ -31,7 +31,12 @@ namespace Sharik.Application.Featuers.User.Queries.GetProfile
                             us.SkillLevel ,
                             us.PointPerHour,
                             us.StudentsCount
-                        )).ToList()
+                        )).ToList(),
+                        u.ReceivedRatings
+                        .Select(r=> new RatingDto(
+                            r.Rater.fullName,
+                            r.Score,
+                            r.Comment)).ToList()
                         )).FirstOrDefaultAsync(ct);
          
             return data;

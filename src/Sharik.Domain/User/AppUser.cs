@@ -75,8 +75,7 @@ namespace Sharik.Infrastructure.Auth
             LastName = lastName;
             Bio = bio;
             ProfileStatus = ProfileStatus.Complete;
-            TotalPointsEarned += 50;
-
+            AddPoints(50);
             return Result.Updated;
         }
         public Result<Updated> UpdateProfile(string firstName, string lastName, string bio)
@@ -95,6 +94,51 @@ namespace Sharik.Infrastructure.Auth
 
             return Result.Updated;
         }
+
+        public  Result<Success> DeductPoints(int points)
+        {
+
+            if (points <= 0)
+                return AppUserErrors.InvalidPoints;
+
+            if (points > TotalPointsEarned)
+                return AppUserErrors.InsufficientPoints;
+
+            TotalPointsEarned -= points;
+            return Result.Success;
+        }
+
+        public Result<Success> AddPoints(int points)
+        {
+
+            if (points <= 0)
+                return AppUserErrors.InvalidPoints;
+
+            TotalPointsEarned += points;
+            return Result.Success;
+        }
+
+        public Result<Success> ReceiveRating(Rating rating)
+        {
+            _receivedRatings.Add(rating);
+            Rating = _receivedRatings.Average(r => r.Score);
+
+            return Result.Success;
+        }
+        public Result<Success> GiveRating(Rating rating)
+        {
+            if (rating.RaterId != this.Id)
+                return AppUserErrors.RatingDoesNotBelongToUser;
+
+            var ratePoints = rating.Score * 2;
+
+            AddPoints(ratePoints);
+
+            _givenRatings.Add(rating);
+            return Result.Success;
+        }
+
+
         private static Result<Success> Validate(string username, string email)
         {
             if (string.IsNullOrWhiteSpace(username))

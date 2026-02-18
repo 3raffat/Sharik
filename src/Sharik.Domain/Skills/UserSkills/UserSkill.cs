@@ -72,6 +72,12 @@ namespace Sharik.Domain.Skills.UserSkills
             return Result.Success;
         }
 
+        public Result<Success> IncrementStudentCount()
+        {
+            StudentsCount++;
+            return Result.Success;
+        }
+
         private static Result<Success> Validate(Guid userId,
                                                 Guid skillId,
                                                 SkillLevel skillLevel,

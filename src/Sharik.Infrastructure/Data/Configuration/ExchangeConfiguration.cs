@@ -32,7 +32,8 @@ namespace Sharik.Infrastructure.Data.Configuration
             builder.HasOne(e => e.SkillOffered)
                    .WithMany(e => e.OfferedExchanges)
                    .HasForeignKey(e => e.SkillOfferedId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .IsRequired(false)
+                   .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(e => e.SkillRequested)
                      .WithMany(e => e.RequestedExchanges)

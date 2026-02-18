@@ -13,11 +13,11 @@ namespace Sharik.Domain.Exchanges
         public Guid RequesterId { get; private set; } // id user need to learn
         public Guid ProviderId { get; private set; } // id learnar user
 
-        public Guid SkillOfferedId { get; private set; }  // for requester
+        public Guid? SkillOfferedId { get; private set; }  // for requester
 
         public Guid SkillRequestedId { get; private set; } // for provider
 
-        public ExchangeType Type { get; private set; } 
+        public ExchangeType Type { get; private set; }
 
         public int? Duration { get; private set; }
 
@@ -30,7 +30,7 @@ namespace Sharik.Domain.Exchanges
         public string? CancellationReason { get; private set; }
 
         public ExchangeStatus ExchangeStatus = ExchangeStatus.Pending;
-        public Skill SkillOffered { get; set; } = null!;
+        public Skill? SkillOffered { get; set; } = null!;
         public Skill SkillRequested { get; set; } = null!;
         public AppUser Requester { get; set; } = null!;
         public AppUser Provider { get; set; } = null!;
@@ -42,64 +42,80 @@ namespace Sharik.Domain.Exchanges
 
         private Exchange(Guid requesterId ,
                          Guid providerId ,
-                         Guid skillOfferedId ,
                          Guid skillRequestedId ,
                          ExchangeType type ,
-                         int? duration ,
-                         int? pointsValue ,
+                         int duration ,
+                         int pointsValue ,
                          string? requesterMessage)
         {
             RequesterId = requesterId;
             ProviderId = providerId;
-            SkillOfferedId = skillOfferedId;
             SkillRequestedId = skillRequestedId;
             Type = type;
             Duration = duration;
             PointsValue = pointsValue;
             RequesterMessage = requesterMessage;
         }
+
         private Exchange(Guid requesterId ,
                          Guid providerId ,
-                         Guid skillOfferedId ,
                          Guid skillRequestedId ,
                          ExchangeType type ,
                          string? requesterMessage)
         {
             RequesterId = requesterId;
             ProviderId = providerId;
-            SkillOfferedId = skillOfferedId;
             SkillRequestedId = skillRequestedId;
             Type = type;
             RequesterMessage = requesterMessage;
         }
-        public static Result<Exchange> Create(Guid requesterId ,
-                                              Guid providerId ,
-                                              Guid skillOfferedId ,
-                                              Guid skillRequestedId ,
-                                              ExchangeType type ,
-                                              int? duration ,
-                                              int? pointsValue ,
-                                              string? requesterMessage)
+
+        public static Result<Exchange> CreateSwap(Guid requesterId ,
+                                                   Guid providerId ,
+                                                   Guid skillOfferedId ,
+                                                   Guid skillRequestedId ,
+                                                   string? requesterMessage)
         {
+
+            if (skillOfferedId == skillRequestedId)
+                return ExchangeErrors.CannotExchangeSameSkill;
+
+            if (skillOfferedId == Guid.Empty)
+                return ExchangeErrors.SkillOfferedIdRequired;
 
             var validation = Validate(requesterId ,
                                       providerId ,
-                                      skillOfferedId ,
                                       skillRequestedId ,
-                                      type ,
-                                      duration ,
-                                      pointsValue ,
                                       requesterMessage);
 
             if (validation.IsFailure)
                 return validation.Errors;
 
-            if (type == ExchangeType.Swap)
-                return new Exchange(requesterId , providerId , skillOfferedId , skillRequestedId , type , requesterMessage);
+            return new Exchange(requesterId , providerId , skillRequestedId , ExchangeType.Swap , requesterMessage);
 
-            return new Exchange(requesterId , providerId , skillOfferedId , skillRequestedId , type , duration , pointsValue , requesterMessage);
         }
 
+        public static Result<Exchange> CreateTeaching(Guid requesterId ,
+                                                      Guid providerId ,
+                                                      Guid skillRequestedId ,
+                                                      int duration ,
+                                                      int PointsValue ,
+                                                      string? requesterMessage)
+        {
+
+
+            var validation = Validate(requesterId ,
+                                     providerId ,
+                                     skillRequestedId ,
+                                     duration ,
+                                     PointsValue ,
+                                     requesterMessage);
+
+            return new Exchange(requesterId , providerId , skillRequestedId , ExchangeType.Teaching , duration , PointsValue , requesterMessage);
+        }
+
+
+        #region
         public Result<Updated> AcceptExchange(Guid providerId)
         {
 
@@ -142,6 +158,9 @@ namespace Sharik.Domain.Exchanges
             if (ProviderId != providerId)
                 return ExchangeErrors.Unauthorized;
 
+            if (PointsValue is int value)
+                Requester.AddPoints(value);
+
             ExchangeStatus = ExchangeStatus.Rejected;
 
             return Result.Updated;
@@ -150,6 +169,13 @@ namespace Sharik.Domain.Exchanges
         {
             if (ExchangeStatus != ExchangeStatus.Accepted)
                 return ExchangeErrors.CanOnlyCompleteAcceptedExchanges;
+
+            if (PointsValue is int value)
+                Provider.AddPoints(value);
+
+            var skill = Provider.UserSkills.FirstOrDefault(x => x.SkillId == SkillRequestedId);
+
+            skill!.IncrementStudentCount();
 
             ExchangeStatus = ExchangeStatus.Completed;
             return Result.Updated;
@@ -165,7 +191,7 @@ namespace Sharik.Domain.Exchanges
             if (raterId == ratedUserId)
                 return ExchangeErrors.CannotRateOwnExchange;
 
-            if (_ratings.Any(r => r.RatedUserId == ratedUserId) || _ratings.Any(r => r.RaterId == raterId))
+            if (_ratings.Any(r => r.RatedUserId == ratedUserId && r.ExchangeId == this.Id))
                 return ExchangeErrors.AlreadyRatedExchange;
 
             var ratingresult = Rating.Create(Id , raterId , ratedUserId , score , comment);
@@ -175,10 +201,9 @@ namespace Sharik.Domain.Exchanges
 
             _ratings.Add(ratingresult.Value);
 
-            return ratingresult.Value;
+                return ratingresult.Value;
 
         }
-
         public Result<Message> AddMessage(Guid senderId , string content)
         {
             if (ExchangeStatus != ExchangeStatus.Accepted)
@@ -194,15 +219,31 @@ namespace Sharik.Domain.Exchanges
             _message.Add(msgResult.Value);
             return msgResult.Value;
         }
+        #endregion
 
+        private static Result<Success> Validate(Guid requesterId ,
+                                                Guid providerId ,
+                                                Guid skillRequestedId ,
+                                                int duration ,
+                                                int pointValue ,
+                                                string? requesterMessage)
+
+
+        {
+
+            if (duration <= 0)
+                return ExchangeErrors.InvalidDuration;
+
+            if (pointValue < 0)
+                return ExchangeErrors.PointsValueInvalid;
+
+            return Validate(requesterId , providerId , skillRequestedId , requesterMessage);
+
+        }
 
         private static Result<Success> Validate(Guid requesterId ,
                                               Guid providerId ,
-                                              Guid skillOfferedId ,
                                               Guid skillRequestedId ,
-                                              ExchangeType type ,
-                                              int? duration ,
-                                              int? pointsValue ,
                                               string? requesterMessage)
         {
             if (requesterId == Guid.Empty)
@@ -211,32 +252,35 @@ namespace Sharik.Domain.Exchanges
             if (providerId == Guid.Empty)
                 return ExchangeErrors.ProviderIdRequired;
 
-            if (skillOfferedId == Guid.Empty)
-                return ExchangeErrors.SkillOfferedIdRequired;
+
 
             if (skillRequestedId == Guid.Empty)
                 return ExchangeErrors.SkillRequestedIdRequired;
 
-            if (!Enum.IsDefined(type))
-                return ExchangeErrors.InvalidExchangeType;
+
 
             if (requesterId == providerId)
                 return ExchangeErrors.CannotExchangeWithSelf;
 
-            if (skillOfferedId == skillRequestedId)
-                return ExchangeErrors.CannotExchangeSameSkill;
 
-            if (type == ExchangeType.Points && (duration == null || duration <= 0))
-                return ExchangeErrors.DurationRequiredForPoints;
 
-            if (type == ExchangeType.Points && (pointsValue == null || pointsValue <= 0))
-                return ExchangeErrors.PointsValueRequiredForPointsExchange;
 
             if (requesterMessage != null && requesterMessage.Length > 1000)
                 return ExchangeErrors.RequesterMessageTooLong;
 
 
             return Result.Success;
+        }
+
+        public static Result<int> CalculateTotalPoints(int PointPerHour , int totalPointsEarned , int duration)
+        {
+
+            var requiredPoints = PointPerHour * duration;
+
+            if (requiredPoints > totalPointsEarned)
+                return ExchangeErrors.NotEnoughPoints(requiredPoints);
+
+            return requiredPoints;
         }
 
     }

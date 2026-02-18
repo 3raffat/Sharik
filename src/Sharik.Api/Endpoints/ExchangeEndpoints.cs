@@ -8,6 +8,7 @@ using Sharik.Application.Featuers.Exchanges.AcceptExchanges;
 using Sharik.Application.Featuers.Exchanges.CancelleExchanges;
 using Sharik.Application.Featuers.Exchanges.CompleteExchanges;
 using Sharik.Application.Featuers.Exchanges.CreateExchanges;
+using Sharik.Application.Featuers.Exchanges.CreateTeachingExchanges;
 using Sharik.Application.Featuers.Exchanges.Dtos;
 using Sharik.Application.Featuers.Exchanges.Queries.GetExchangesByProviderId;
 using Sharik.Application.Featuers.Exchanges.RejectExchanges;
@@ -26,8 +27,12 @@ namespace Sharik.Api.Endpoints
                 .RequireAuthorization()
                 .WithTags("Exchanges");
 
-            group.MapPost("" , CreateExchange)
-                 .WithSummary("Create a new exchange")
+            group.MapPost("/swap" , CreateSwapExchange)
+                 .WithSummary("Create a new exchange with swap type")
+                 .WithDescription("Creates a new exchange between users");
+
+            group.MapPost("/teaching" , CreateTeachingExchange)
+                 .WithSummary("Create a new exchange with teaching type")
                  .WithDescription("Creates a new exchange between users");
 
             group.MapPut("{exchangeId:guid}/accept" , AcceptExchange)
@@ -115,20 +120,17 @@ namespace Sharik.Api.Endpoints
 
 
 
-        private async static Task<IResult> CreateExchange(ISender sender ,
+        private async static Task<IResult> CreateSwapExchange(ISender sender ,
                                                     IUser user ,
-                                                    [FromBody] CreateExchangeRequest request ,
+                                                    [FromBody] CreateSwapExchangeRequest request ,
                                                     CancellationToken ct)
         {
 
 
-            var result = await sender.Send(new CreateExchangesCommand(user.UserId ,
+            var result = await sender.Send(new CreateSwapExchangesCommand(user.UserId ,
                                                                       request.providerId ,
                                                                       request.skillOfferedId ,
                                                                       request.skillRequestedId ,
-                                                                      request.type ,
-                                                                      request.duration ,
-                                                                      request.pointsValue ,
                                                                       request.requesterMessage) , ct);
 
             return result.Match(value => Results.Ok(new StandardSuccessResponse<Success>(Data: value ,
@@ -137,6 +139,23 @@ namespace Sharik.Api.Endpoints
                 errors => errors.ToProblem());
         }
 
+        private async static Task<IResult> CreateTeachingExchange(ISender sender ,
+                                                   IUser user ,
+                                                   [FromBody] CreateTeachingExchangeRequest request ,
+                                                   CancellationToken ct)
+        {
 
+
+            var result = await sender.Send(new CreateTeachingExchangesCommand(user.UserId ,
+                                                                              request.providerId ,
+                                                                              request.skillRequestedId ,
+                                                                              request.duration,
+                                                                              request.requesterMessage) , ct);
+
+            return result.Match(value => Results.Ok(new StandardSuccessResponse<Success>(Data: value ,
+                Status: StatusCodes.Status200OK ,
+                Message: "Exchange Send successfully")) ,
+                errors => errors.ToProblem());
+        }
     }
 }

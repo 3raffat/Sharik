@@ -54,25 +54,6 @@ namespace Sharik.Domain.Exchanges
             description: "Duration must be a positive integer."
         );
 
-        public static Error InvalidPointsValue => Error.Validation(
-            code: "Exchange.PointsValue.Invalid" ,
-            description: "Points value must be a non-negative integer."
-        );
-
-        public static Error InvalidExchangeType => Error.Validation(
-            code: "Exchange.Type.Invalid" ,
-            description: "Exchange type is invalid."
-        );
-
-        public static Error DurationRequiredForPoints => Error.Validation(
-            code: "Exchange.Duration.RequiredForPoints" ,
-            description: "Duration is required for Points exchanges."
-        );
-
-        public static Error PointsValueRequiredForPoints => Error.Validation(
-            code: "Exchange.PointsValue.RequiredForPoints" ,
-            description: "Points value is required for points exchanges."
-        );
 
         public static Error CannotRateOwnExchange => Error.Validation(
             code: "Exchange.Rating.CannotRateOwnExchange" ,
@@ -148,6 +129,10 @@ namespace Sharik.Domain.Exchanges
         public static Error ChatOnlyInAcceptedExchanges => Error.Conflict(
            code: "Exchange.Chat.OnlyAccepted" ,
            description: "Chat is only available for accepted exchanges.");
+
+        public static Error NotEnoughPoints(int requiredPoints) => Error.Validation(
+           code: "Exchange.Points.Insufficient" ,
+           description: $"You need at least {requiredPoints} points to create this exchange.");
 
 
     }
