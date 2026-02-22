@@ -111,11 +111,13 @@ namespace Sharik.Domain.Exchanges
                                      PointsValue ,
                                      requesterMessage);
 
+            if (validation.IsFailure)
+                return validation.Errors;
+
             return new Exchange(requesterId , providerId , skillRequestedId , ExchangeType.Teaching , duration , PointsValue , requesterMessage);
         }
 
 
-        #region
         public Result<Updated> AcceptExchange(Guid providerId)
         {
 
@@ -220,7 +222,6 @@ namespace Sharik.Domain.Exchanges
             _message.Add(msgResult.Value);
             return msgResult.Value;
         }
-        #endregion
 
         private static Result<Success> Validate(Guid requesterId ,
                                                 Guid providerId ,
