@@ -18,19 +18,11 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    app.MapOpenApi();
+
     app.MapScalarApiReference();
     app.UseDeveloperExceptionPage();
-    app.MapOpenApi();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/openapi/v1.json" , " Sharik API V1");
-        options.RoutePrefix = string.Empty;
-        options.EnableDeepLinking();
-        options.DisplayRequestDuration();
-        options.EnableFilter();
-
-    });
-    await app.InitialiseDatabaseAsync();
+   app.InitialiseDatabaseAsync();
 }
 using (var scope = app.Services.CreateScope())
 {

@@ -1,6 +1,5 @@
 ﻿using Asp.Versioning;
 using Sharik.Api.Extensions;
-using Sharik.Api.OpenApi;
 using Sharik.Api.Services;
 using Sharik.Application.Common.Interfaces;
 using System.Text.Json.Serialization;
@@ -14,7 +13,6 @@ namespace Sharik.Api
         {
 
             services.AddCustomApiVersioning()
-                    .AddApiDocumentation()
                     .AddJsonConfiguration()
                     .AddCustomProblemDetails()
                     .AddExceptionHandling()
@@ -40,24 +38,7 @@ namespace Sharik.Api
             return services;
         }
 
-        public static IServiceCollection AddApiDocumentation(this IServiceCollection services)
-        {
-            string[] versions = ["v1"];
-            foreach (var version in versions)
-            {
-                services.AddOpenApi(version , options =>
-                {
-                    // Versioning config
-                    options.AddDocumentTransformer<VersionInfoTransformer>();
-
-                    // Security Scheme config
-                    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-
-                    options.AddOperationTransformer<BearerSecurityOperationTransformer>();
-                });
-            }
-            return services;
-        }
+        
         public static IServiceCollection AddJsonConfiguration(this IServiceCollection services)
         {
             services.ConfigureHttpJsonOptions(options =>

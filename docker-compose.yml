@@ -1,0 +1,24 @@
+services:
+  sharik.api:
+    image: ${DOCKER_REGISTRY-}sharikapi
+    build:
+      context: .
+      dockerfile: src/Sharik.Api/Dockerfile
+    ports:
+     - "6060:8080"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: SkillExchangeDb
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

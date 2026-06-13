@@ -8,4 +8,7 @@
   <Folder Name="/tests/">
     <Project Path="Sharik.Domain.UnitTests/Sharik.Domain.UnitTests.csproj" Id="e6637bd8-c3f2-4a5b-be5f-69553d3a21fd" />
   </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>
